@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6921ef0658c622952727a9be4834a15c"></script>
-    <script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 3
-		};
 
-		var map = new kakao.maps.Map(container, options);
-	</script>
     <meta charset="UTF-8">
     <title>HELLO</title>
 </head>
 <body>
-    <div id="map" style="width:500px;height:400px;"></div>
+    <div id="map" style="width:700px;height:700px;"></div>
+    <div>HELLO</div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674"></script>
+    <script>
+		var container = document.getElementById('map');
+		var options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),  //지도 위치
+			level: 5 //늘릴수록 위치에서 멀어짐
+		};
+
+		var map = new kakao.maps.Map(container, options);
+	</script>
 </body>
 </html>
