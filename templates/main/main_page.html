@@ -1,22 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
-    <title>HELLO</title>
+    <title>main page</title>
+
+    <style>
+        html, body{
+
+        /*공통 요소 css */
+            width:100%;
+            height:100%;
+            margin:0px;
+            padding:0px;
+        }
+
+        /* left container 관련 css */
+        #minimal_box{
+            z-index:1;
+            position:absolute;
+            width:2%;
+            height:100%;
+            background-color:yellow;
+        }
+
+        #left_binding{
+            z-index:1;
+            position:absolute;
+            left:2%;
+            width:20%;
+            height:100%;
+            margin:0px;
+            float:left;
+        }
+
+        #login_box{
+            height:20%;
+            background-color:black;
+        }
+
+        #new_reviews_box{
+            height:60%;
+            background-color:green;
+        }
+
+        #write_review_box{
+            height:20%;
+            background-color:pink;
+        }
+
+
+
+
+        /* 검색바 관련 css */
+        #search_bar{
+            z-index:1;
+
+        }
+
+
+
+       /* 카카오 맵 관련 css*/
+        #map{
+            z-index:0;
+            width:100%;
+            height:100%;
+        }
+
+    </style>
 </head>
 <body>
-    <div id="map" style="width:700px;height:700px;"></div>
-    <div>HELLO</div>
+    <div id="search_bar"></div>
+    <div id="minimal_box" onclick="minimalize_box()"></div>
+    <div id="left_binding">
+        <div id="login_box"></div>
+        <div id="new_reviews_box"></div>
+        <div id="write_review_box"></div>
+    </div>
+
+    <div id="map"></div>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674"></script>
     <script>
 		var container = document.getElementById('map');
 		var options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),  //지도 위치
+			center: new kakao.maps.LatLng(36.629309829785576, 127.45657430042165),  //지도 위치
 			level: 5 //늘릴수록 위치에서 멀어짐
 		};
 
 		var map = new kakao.maps.Map(container, options);
+
+        var markerPosition = new kakao.maps.LatLng() //마커 위치
+        var marker = new kakao.maps.Marker({
+            position: markerPosition
+        });
+        marker.setMap(map)
+        //마커 추가하는 자바스크립트 코드 예시
 	</script>
+    <script>
+        is_hidden = 0;
+        function minimalize_box(){
+            var container = document.getElementById("left_binding");
+            if(is_hidden == 0)
+            {
+                container.style.visibility = "hidden";
+                is_hidden = 1;
+            }
+            else{
+                container.style.visibility = "visible";
+                is_hidden = 0;
+            }
+
+        }
+    </script>
 </body>
 </html>
