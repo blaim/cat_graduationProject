@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,12 +68,16 @@
         }
 
     </style>
+    <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script type="text/javascript" src="{%static 'javascripts/login.js' %}"></script>
 </head>
 <body>
     <div id="search_bar"></div>
     <div id="minimal_box" onclick="minimalize_box()"></div>
     <div id="left_binding">
-        <div id="login_box"></div>
+        <div id="login_box">
+            <a href="javascript:void(0);" onclick="logintest()"><img src = "{%static 'images/loginimage.png' %}" alt="login"></a>
+        </div>
         <div id="new_reviews_box"></div>
         <div id="write_review_box"></div>
     </div>
