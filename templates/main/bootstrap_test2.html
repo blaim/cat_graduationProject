@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+      #temp_for_location{
+        position:absolute;
+        font-size:60px;
+        top:0;
+        left:0;
+      }
+      
+      #all_wrap{
+        margin:5%;
+        width:90%;
+        height:90%;
+      }
+      .selecting_tools{
+        float:left;
+        margin:0;
+        width:30%;
+      }
+
+      #temp_drag{
+        width:100px;
+        height:100px;
+        background-color:black;
+        
+      
+      }
+
+      #draw_room{
+        position:absolute;
+        margin-left:30px;
+        width:40vw;
+        height:40vw;
+        display:inline-block;
+        background-color:blue;
+      }
+
+      .room_one_element{
+          width:5%;
+          height:5%;
+          float:left;
+          background-color:green;
+          color:green;
+          border:1px solid black;
+      }
+      
+    </style>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.vertical-tabs.min.css"
+</head>
+<body>
+  
+  <div id="temp_for_location">123</div>
+  <div id="temp_for_size">what</div>
+
+  <div id="all_wrap" class="container-fluid">
+    <div class="panel-group selecting_tools" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title text-center">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              방 구조
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div id="temp_drag" class="draggable"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title text-center">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              다른거 메뉴
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title text-center">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              다른거 메뉴
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <div id="draw_room">
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+        <div class="room_one_element"></div>
+    </div>
+  </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script>
+  var draw_room_box = document.getElementById("draw_room")
+  var change_value = document.getElementById("temp_for_location")
+
+  var color = []
+
+  for(var i =0;i<401;i++)
+    color[i] = 0
+  
+
+  function get_size(){
+    var size = document.getElementById("temp_for_size")
+    size.innerHTML = "width : " + draw_box_width + ", height : "+ draw_box_height;
+  }
+
+  function change_color(event){
+    var text = event.target.textContent
+    console.log(text)
+  }
+  
+
+  $(".room_one_element").click(function(){
+    var number = $(".room_one_element").index(this)+1;
+    if(color[number]==0)
+    {
+      $(this).css("background-color","yellow")
+      color[number] = 1
+    }
+    else
+    {
+      $(this).css("background-color","green")
+      color[number] = 0
+    }
+
+    change_value.innerHTML = number;
+    console.log(number)
+  });
+  
+  
+</script>
+</body>
+</html>
