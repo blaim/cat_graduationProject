@@ -26,3 +26,12 @@ def top(request):
     nickname = user_info_result['kakao_account']['profile']['nickname']
     print(nickname)
     return render(request, 'main/top.html', {'access_token':access_token, 'nickname':nickname})
+
+def draw(request):
+    return render(request, 'main/draw_room.html')
+
+def bootstrap(request):
+    return render(request, 'main/bootstrap_test.html')
+
+def bootstrap2(request):
+    return render(request, 'main/bootstrap_test2.html')
