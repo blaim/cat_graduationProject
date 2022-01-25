@@ -1,0 +1,2 @@
+SECRET_KEY = '비밀이얌'
+ALGORITHM = 'HS256'
