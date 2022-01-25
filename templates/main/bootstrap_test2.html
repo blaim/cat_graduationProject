@@ -23,12 +23,17 @@
         width:30%;
       }
 
-      #temp_drag{
+      #add_room{
         width:100px;
         height:100px;
-        background-color:black;
-        
-      
+        background-color:rgb(145, 145, 145);
+        color:rgb(224, 224, 224);
+        border:8px dashed grey;
+        font-size:60px;
+        text-align:center;
+        margin:5px;
+        cursor:pointer;
+        float:left;
       }
 
       #draw_room{
@@ -40,6 +45,8 @@
         background-color:blue;
       }
 
+    
+
       .room_one_element{
           width:5%;
           height:5%;
@@ -47,6 +54,18 @@
           background-color:green;
           color:green;
           border:1px solid black;
+          cursor:crosshair;
+      }
+
+      .room_structure{
+        width:100px;
+        height:100px;
+        background-color:black;
+        color:white;
+        font-size:70px;
+        text-align:center;
+        float:left;
+        margin:5px;
       }
       
     </style>
@@ -64,13 +83,13 @@
         <div class="panel-heading" role="tab" id="headingOne">
           <h4 class="panel-title text-center">
             <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              방 구조
+              방 추가
             </a>
           </h4>
         </div>
         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-            <div id="temp_drag" class="draggable"></div>
+          <div id="room_add_parent" class="panel-body">
+            <div id="add_room">+</div>
           </div>
         </div>
       </div>
@@ -115,6 +134,16 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="{%static 'js/bootstrap.js' %}"></script>
 <script>
+  //방구조 개수 함수
+  var structure_number = 1
+
+  //구조 드래그 시작, 끝지점 xy좌표 저장
+  var room_sturcture_drag_start_x
+  var room_structure_drag_start_y
+  var room_sturcture_drag_end_x
+  var room_structure_drag_end_y
+
+
   var draw_room_box = document.getElementById("draw_room")
   var change_value = document.getElementById("temp_for_location")
 
@@ -135,21 +164,85 @@
   }
   
 
-  $(".room_one_element").click(function(){
-    var number = $(".room_one_element").index(this)+1;
-    if(color[number]==0)
-    {
-      $(this).css("background-color","yellow")
-      color[number] = 1
-    }
-    else
-    {
-      $(this).css("background-color","green")
-      color[number] = 0
-    }
+  //마우스 클릭시 x,y좌표 저장
+  $(".room_one_element").mousedown(function(){
+    var number = $(".room_one_element").index(this);
+
+    //0,0에서 19,19까지
+    //밑으로몇칸이 x
+    //오른쪽으로 몇칸이 y
+    room_structure_drag_start_x = parseInt(number/20)
+    room_structure_drag_start_y = number % 20
+
 
     change_value.innerHTML = number;
-    console.log(number)
+
+    console.log(room_structure_drag_start_x)
+    console.log(room_structure_drag_start_y)
+  });
+
+
+  //마우스 놓으면 시작위치부터 놓은 위치까지 색칠
+  $(".room_one_element").mouseup(function(){
+    var x1
+    var x2
+    var y1
+    var y2
+    var number = $(".room_one_element").index(this);
+
+    room_structure_drag_end_x = parseInt(number/20)
+    room_structure_drag_end_y = number % 20
+
+    if(room_structure_drag_start_x <= room_structure_drag_end_x){
+      x1 = room_structure_drag_start_x
+      x2 = room_structure_drag_end_x
+    }else{
+      x1 = room_structure_drag_end_x
+      x2 = room_structure_drag_start_x
+    }
+
+    if(room_structure_drag_start_y <= room_structure_drag_end_y){
+      y1 = room_structure_drag_start_y
+      y2 = room_structure_drag_end_y
+    }else{
+      y1 = room_structure_drag_end_y
+      y2 = room_structure_drag_start_y
+    }
+
+    var change_color_num
+
+    for(var tempx = x1;tempx<=x2;tempx++)
+    {
+      for(var tempy = y1;tempy<=y2;tempy++)
+      {
+        change_color_num = tempx * 20 + tempy
+        if(color[change_color_num]==0){
+          $(".room_one_element").eq(change_color_num).css("background-color","yellow")
+          color[number] = 1
+        }else{
+          $(".room_one_element").eq(change_color_num).css("background-color","green")
+          color[number] = 0
+        }
+      }
+    }
+    
+
+
+  });
+
+  //방추가 함수
+  $("#add_room").click(function(){
+    
+
+    var new_structure = document.createElement("div")
+    new_structure.className = "room_structure"
+    new_structure.innerHTML = structure_number
+    structure_number = structure_number+1
+
+    var parent = document.getElementById("room_add_parent")
+
+    parent.appendChild(new_structure);
+    
   });
   
   
