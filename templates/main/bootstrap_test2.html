@@ -42,19 +42,19 @@
         width:40vw;
         height:40vw;
         display:inline-block;
-        background-color:blue;
+        
       }
 
     
 
       .room_one_element{
-          width:5%;
-          height:5%;
+          width:3.3%;
+          height:3.3%;
           float:left;
           background-color:green;
           color:green;
-          border:1px solid black;
-          cursor:crosshair;
+          
+          
       }
 
       .room_structure{
@@ -62,15 +62,31 @@
         height:100px;
         background-color:black;
         color:white;
+        cursor:default;
         font-size:70px;
         text-align:center;
         float:left;
         margin:5px;
       }
+
+      .trash_can{
+        width:100px;
+        height:100px;
+        background-repeat: no-repeat;
+        background-image: url("{%static 'svgs/trash-can-solid.svg' %}");
+        float:left;
+        margin:5px;
+      }
       
     </style>
+
     <link rel="stylesheet" href="{%static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{%static 'css/bootstrap.vertical-tabs.min.css' %}">
+    <link rel="stylesheet" href="{%static 'css/all.css' %}">
+    <link rel="stylesheet" href="{%static 'js/all.js' %}">
+
+
+    
 </head>
 <body>
   
@@ -90,6 +106,7 @@
         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
           <div id="room_add_parent" class="panel-body">
             <div id="add_room">+</div>
+            <div class="trash_can" ondragover="allow_room_structure_drop();" ondrop="drop_room_strucutre_to_trash();"></div>
           </div>
         </div>
       </div>
@@ -126,7 +143,7 @@
     
     <div id="draw_room">
         <script type="text/javascript">
-            for (var i = 0;i<400;i++)
+            for (var i = 0;i<900;i++)
                 document.write('<div class="room_one_element"></div>');
         </script>
     </div>
@@ -136,6 +153,8 @@
 <script>
   //방구조 개수 함수
   var structure_number = 1
+  var current_room_structure = -1
+  var drag_started = 0
 
   //구조 드래그 시작, 끝지점 xy좌표 저장
   var room_sturcture_drag_start_x
@@ -143,14 +162,22 @@
   var room_sturcture_drag_end_x
   var room_structure_drag_end_y
 
+  //드래그시 미리보기 좌표 네개
+  var temp_drag_x1 = -1
+  var temp_drag_y1 = -1
+  var temp_drag_x2 = -1
+  var temp_drag_y2 = -1
+
+  //코드 저장하는 배열 4개 단위로 저장
+  var room_structure_code = []
+
+  //현재 드래그하는 element
+  current_dragging_element = -1
+
 
   var draw_room_box = document.getElementById("draw_room")
   var change_value = document.getElementById("temp_for_location")
 
-  var color = []
-
-  for(var i =0;i<401;i++)
-    color[i] = 0
   
 
   function get_size(){
@@ -165,14 +192,16 @@
   
 
   //마우스 클릭시 x,y좌표 저장
-  $(".room_one_element").mousedown(function(){
+  $(".room_one_element").mousedown(function(e){
+    drag_started = 1
     var number = $(".room_one_element").index(this);
 
-    //0,0에서 19,19까지
+    e.preventDefault()
+    //0,0에서 29,29까지
     //밑으로몇칸이 x
     //오른쪽으로 몇칸이 y
-    room_structure_drag_start_x = parseInt(number/20)
-    room_structure_drag_start_y = number % 20
+    room_structure_drag_start_x = parseInt(number/30)
+    room_structure_drag_start_y = number % 30
 
 
     change_value.innerHTML = number;
@@ -181,17 +210,66 @@
     console.log(room_structure_drag_start_y)
   });
 
+  //마우스 끄는동안 미리보기 생성
+  $(".room_one_element").mouseenter(function(e){
+    if(current_room_structure!=-1 && drag_started==1)
+    {
+      var number = $(".room_one_element").index(this);
+      
+      if(temp_drag_x1 != -1 && temp_drag_y1 != -1)
+      {
+        print_color("green", temp_drag_x1,temp_drag_y1,temp_drag_x2,temp_drag_y2)
+      }
+
+      e.preventDefault()
+      var x1
+      var x2
+      var y1
+      var y2
+      var number = $(".room_one_element").index(this);
+
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(room_structure_drag_start_x <= room_structure_drag_end_x){
+        x1 = room_structure_drag_start_x
+        x2 = room_structure_drag_end_x
+      }else{
+        x1 = room_structure_drag_end_x
+        x2 = room_structure_drag_start_x
+      }
+
+      if(room_structure_drag_start_y <= room_structure_drag_end_y){
+        y1 = room_structure_drag_start_y
+        y2 = room_structure_drag_end_y
+      }else{
+        y1 = room_structure_drag_end_y
+        y2 = room_structure_drag_start_y
+      }
+
+      temp_drag_x1 = x1
+      temp_drag_y1 = y1
+      temp_drag_x2 = x2
+      temp_drag_y2 = y2
+
+      print_color("red", x1,y1,x2,y2)
+    }
+    
+  });
+
+
 
   //마우스 놓으면 시작위치부터 놓은 위치까지 색칠
   $(".room_one_element").mouseup(function(){
+    drag_started = 0
     var x1
     var x2
     var y1
     var y2
     var number = $(".room_one_element").index(this);
 
-    room_structure_drag_end_x = parseInt(number/20)
-    room_structure_drag_end_y = number % 20
+    room_structure_drag_end_x = parseInt(number/30)
+    room_structure_drag_end_y = number % 30
 
     if(room_structure_drag_start_x <= room_structure_drag_end_x){
       x1 = room_structure_drag_start_x
@@ -209,41 +287,112 @@
       y2 = room_structure_drag_start_y
     }
 
-    var change_color_num
-
-    for(var tempx = x1;tempx<=x2;tempx++)
+    if(room_structure_code[current_room_structure]==0)
     {
-      for(var tempy = y1;tempy<=y2;tempy++)
-      {
-        change_color_num = tempx * 20 + tempy
-        if(color[change_color_num]==0){
-          $(".room_one_element").eq(change_color_num).css("background-color","yellow")
-          color[number] = 1
-        }else{
-          $(".room_one_element").eq(change_color_num).css("background-color","green")
-          color[number] = 0
-        }
-      }
+      room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+      print_color("yellow", x1,y1,x2,y2)
     }
+    else
+    {
+      print_color("green", room_structure_code[current_room_structure][0],room_structure_code[current_room_structure][1],room_structure_code[current_room_structure][2],room_structure_code[current_room_structure][3])
+      room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+      print_color("yellow", x1,y1,x2,y2)
+    }
+
+    temp_drag_x1 = -1
+    temp_drag_y1 = -1
+    temp_drag_x2 = -1
+    temp_drag_y2 = -1
+
     
-
-
   });
 
-  //방추가 함수
+
+  //지정영역 색칠하는 함수
+  function print_color(color, startx, starty, endx, endy){
+    for(var tempx = startx;tempx<=endx;tempx++)
+    {
+      for(var tempy = starty;tempy<=endy;tempy++)
+      {
+        change_color_num = tempx * 30 + tempy
+        $(".room_one_element").eq(change_color_num).css("background-color",color)    
+      }
+    }
+  }
+
+  
+
+  //방 구조 추가하고, 쓰는 도구 다르게
+  //방 번호마다 다른 드래그 하도록 설계한다
   $("#add_room").click(function(){
     
-
     var new_structure = document.createElement("div")
     new_structure.className = "room_structure"
+    new_structure.draggable = "true"
+    new_structure.setAttribute("ondragstart","drag_start_room_structure();")
+    new_structure.setAttribute("ondragend","drag_end_room_structure();")
+    
+
     new_structure.innerHTML = structure_number
     structure_number = structure_number+1
 
     var parent = document.getElementById("room_add_parent")
+    room_structure_code.push(0);
+    console.log(room_structure_code)
 
     parent.appendChild(new_structure);
     
   });
+
+  //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
+  $(document).on('click', '.room_structure', function(e){
+    e.preventDefault()
+    if(current_room_structure == $(this).index()-1)
+    {
+      current_room_structure = -1
+      $(this).css('color', 'white')
+      $('.room_one_element').css('cursor', 'default')
+    }
+    else
+    {
+      current_room_structure = $(this).index()-1
+      $('.room_structure').css('color', 'white')
+      $('.room_one_element').css('cursor', 'crosshair')
+      $(this).css('color', 'red')
+    }
+    console.log(current_room_structure)
+  })
+
+  //방구조 drag시작할때 함수
+  drag_start_room_structure = function(){
+    var dragging_element = event.target
+    current_dragging_element = dragging_element.innerHTML
+  }
+
+  //방구조 drag끝낼때 함수
+  drag_end_room_structure = function(){
+    
+  }
+
+  //드래그 드랍 허용하도록 설정
+  allow_room_structure_drop = function(){
+    event.preventDefault()
+  }
+  
+  //쓰레기통에 방 구조 drop했을때 함수
+  drop_room_strucutre_to_trash = function(){
+    var elements = document.getElementsByClassName("room_structure")
+    console.log(elements[current_dragging_element-1])
+    elements[current_dragging_element-1].remove();
+    current_dragging_element = -1
+
+    //지금 innerhtml이용해서 받아오니까 하나 삭제하면 제대로 못함
+  }
+
+
+
+
+  
   
   
 </script>
