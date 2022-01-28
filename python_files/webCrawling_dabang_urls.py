@@ -5,6 +5,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import webCrawling_dabang_particial as WB
 
+import pymongo
+from pymongo import MongoClient
+client = MongoClient('localhost', 27017)
+db = client.Room
+
 
 '''중개사무소 페이지를 입력하면 해당 중개사무소의 방들의 url을 읽어오는 크롤링'''
 '''다방'''
@@ -28,7 +33,7 @@ try:
     '''내부 요소 따로 로딩되기 때문에 로딩 될때까지 wait'''
     '''content box 내부도 로딩 시간에 차이가 있음에 주의하자'''
     #driver.find_element(By.CSS_SELECTOR,'').get_attribute('innerText')
-    WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+    WebDriverWait(driver, 25).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
 
     name_of_agency = driver.find_element(By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-11kevv2-0.iEoaqL > p').get_attribute('innerText')
     agency_number = driver.find_element(By.CSS_SELECTOR,'#content > div > div > ul > li:nth-child(3) > div').get_attribute('innerText')
@@ -45,19 +50,23 @@ try:
     for page in range(0, number_of_rooms//24):
         for single_div in range(1, 25):
             room_urls.append(driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child('+ str(single_div) +') > div > a').get_attribute('href'))
-
         '''다음 방 목록 리스트로 이동'''
-        driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > div.styled__PaginWrap-sc-1u1e15y-0.eOczmr > ul > li:nth-child(7) > button').click()
-        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+        driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > div.styled__PaginWrap-sc-1u1e15y-0.eOczmr > ul > li:nth-last-child(1) > button').click()
+        WebDriverWait(driver, 20).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
 
     '''남은 방 목록 크롤링'''
     for one_room in range(1, (number_of_rooms - 24 * (number_of_rooms//24))+1):
         room_urls.append(driver.find_element(By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(' + str(one_room) + ') > div > a').get_attribute('href'))
 
-    print(room_urls)
-    print(len(room_urls))
+    #print(room_urls)
+    #print(len(room_urls))
     print(name_of_agency)
-    print(number_of_rooms)
+    #print(number_of_rooms)
+    #s = ",".join(room_urls)
+
+    for i in room_urls:
+        WB.get_room_information(i)
+        print(i)
 
 
 
