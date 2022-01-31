@@ -23,15 +23,15 @@ def top(request):
     id=None
     access_token=None
     nickname=None
-    if token != None: #기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
+    if token != 'None' and token != None: #기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
         id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
         access_token = userChecker.checkToken(id)
         nickname = userChecker.checkNickname(id)
         if access_token != None:
             a = requests.get('https://kapi.kakao.com/v1/user/access_token_info', headers={"Authorization": f'Bearer ${access_token}'})
             if (a == -401): #토큰이 만료되어 있다면 토큰이 없다고 체크한다.
-                token=None
-    if token == None: #토큰이 없을 경우 발급받는다.
+                token='None'
+    if token == 'None': #토큰이 없을 경우 발급받는다.
         code = request.GET['code']
         grant_type = 'authorization_code'
         client_id = '10ecf0439a675841802b2143335b994e'

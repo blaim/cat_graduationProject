@@ -37,6 +37,7 @@
         #login_box{
             height:20%;
             background-color:black;
+            color:white;
         }
 
         #new_reviews_box{
@@ -76,8 +77,19 @@
     <div id="minimal_box" onclick="minimalize_box()"></div>
     <div id="left_binding">
         <div id="login_box">
-            <p>{{nickname}}님, 환영합니다</p>
-            <a href="javascript:void(0);" onclick="logintest()"><img src = "{%static 'images/loginimage.png' %}" alt="login"></a>
+            <p id="NickName">{{nickname}}님, 환영합니다.</p>
+            <a id="loginButton" href="javascript:void(0);" onclick="logintest()"><img src = "{%static 'images/loginimage.png' %}" alt="login"></a>
+            <script type="text/javascript">
+                var tokenAlive = '{{tokenAlive}}';
+                if (tokenAlive === 'False')
+                {
+                    document.getElementById('NickName').innerHTML="로그인이 필요합니다."
+                }
+                else
+                {
+                    document.getElementById('loginButton').style.display="none";
+                }
+            </script>
         </div>
         <div id="new_reviews_box"></div>
         <div id="write_review_box"></div>
