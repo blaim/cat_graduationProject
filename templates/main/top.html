@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script type="text/javascript">
+    Kakao.init('9bbfbba5ae61bfb9494771bd71ad837b');
+    Kakao.isInitialized();
+      function checkAccessToken(){
+        console.log(Kakao.Auth.getAccessToken());
+      }
+      function kakaoLogout() {
+        console.log(Kakao.Auth.getAccessToken())
+        if (!Kakao.Auth.getAccessToken()) {
+          console.log('Not logged in.');
+          return;
+        }
+        Kakao.Auth.logout(function() {
+          console.log(Kakao.Auth.getAccessToken());
+        });
+      }
+    </script>
+</head>
+<body>
+    <h1>Top</h1>
+    <h1>access_token : {{access_token}}</h1>
+    <h1>nickname : {{nickname}}</h1>
+    <button class="api-btn" onclick="checkAccessToken()">토큰 점검</button>
+    <button class="api-btn" onclick="kakaoLogout()">로그아웃</button>
+</body>
+</html>
