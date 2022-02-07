@@ -69,32 +69,64 @@
     </style>
 </head>
 <body>
-    <div id="search_bar"></div>
-    <div id="minimal_box" onclick="minimalize_box()"></div>
-    <div id="left_binding">
-        <div id="login_box"></div>
-        <div id="new_reviews_box"></div>
-        <div id="write_review_box"></div>
-    </div>
+<div id="search_bar"></div>
+<div id="minimal_box" onclick="minimalize_box()"></div>
+<div id="left_binding">
+    <div id="login_box"></div>
+    <div id="new_reviews_box"></div>
+    <div id="write_review_box"></div>
+</div>
 
-    <div id="map"></div>
+<div id="map"></div>
+<div id="clickLatlng"></div>
+    <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674"></script>
-    <script>
-		var container = document.getElementById('map');
-		var options = {
-			center: new kakao.maps.LatLng(36.629309829785576, 127.45657430042165),  //지도 위치
-			level: 5 //늘릴수록 위치에서 멀어짐
-		};
+<script>
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new kakao.maps.LatLng(36.628064331494166, 127.45600280223212), // 지도의 중심좌표
+        level: 5 // 지도의 확대 레벨
+    };
 
-		var map = new kakao.maps.Map(container, options);
+// 지도 생성
+var map = new kakao.maps.Map(mapContainer, mapOption);
 
-        var markerPosition = new kakao.maps.LatLng() //마커 위치
+// 주소-좌표 변환 객체 생성
+var geocoder = new kakao.maps.services.Geocoder();
+
+// 마커를 담을 배열
+var markers = [];
+
+// 주소로 좌표 검색
+geocoder.addressSearch('충청북도 청주시 흥덕구 복대동 1580', function(result, status) {
+
+    // 정상적으로 검색되면
+     if (status === kakao.maps.services.Status.OK) {
+
+        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+		var message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
+		message += result[0].x + ')';
+
+		var resultDiv = document.getElementById('clickLatlng');
+		resultDiv.innerHTML = message;
+
+        // 결과값 위치를 마커로 표시
         var marker = new kakao.maps.Marker({
-            position: markerPosition
+            map: map,
+            position: coords
         });
-        marker.setMap(map)
-        //마커 추가하는 자바스크립트 코드 예시
-	</script>
+
+        // 인포윈도우로 장소에 대한 설명을 표시
+        var infowindow = new kakao.maps.InfoWindow({
+            content: '<div style="width:150px;text-align:center;padding:6px 0;">장소</div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심 위치로 이동
+        map.setCenter(coords);
+    }
+});
+</script>
     <script>
         is_hidden = 0;
         function minimalize_box(){
