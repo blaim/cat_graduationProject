@@ -8,8 +8,6 @@ import webCrawling_dabang_particial as WB
 import pymongo
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
-db = client.Room
-
 
 
 
@@ -25,7 +23,7 @@ my_options = webdriver.ChromeOptions()
 '''크롬 창 안뜨도록 설정'''
 my_options.add_argument("headless")
 
-test_url = 'https://www.dabangapp.com/agent/602a18a1b394646bd96669c0'
+test_url = 'https://www.dabangapp.com/agent/61c2c99c43a25a09c06e5ee7'
 
 '''이 파일과 동일 위치에 있다면 path에 파일명만 입력해도 됨'''
 driver = webdriver.Chrome(executable_path='chromedriver' , options = my_options)
@@ -35,7 +33,7 @@ try:
     '''내부 요소 따로 로딩되기 때문에 로딩 될때까지 wait'''
     '''content box 내부도 로딩 시간에 차이가 있음에 주의하자'''
     #driver.find_element(By.CSS_SELECTOR,'').get_attribute('innerText')
-    WebDriverWait(driver, 25).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+    WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
 
     name_of_agency = driver.find_element(By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-11kevv2-0.iEoaqL > p').get_attribute('innerText')
     agency_number = driver.find_element(By.CSS_SELECTOR,'#content > div > div > ul > li:nth-child(3) > div').get_attribute('innerText')
@@ -54,9 +52,8 @@ try:
             room_urls.append(driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child('+ str(single_div) +') > div > a').get_attribute('href'))
         '''다음 방 목록 리스트로 이동'''
         driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > div.styled__PaginWrap-sc-1u1e15y-0.eOczmr > ul > li:nth-last-child(1) > button').click()
-
         WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
-
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
         WebDriverWait(driver, 20).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
 
 
@@ -66,10 +63,10 @@ try:
 
     #print(room_urls)
     #print(len(room_urls))
-    print(name_of_agency)
+    #print(name_of_agency)
     #print(number_of_rooms)
-    #s = ",".join(room_urls)
 
+    #제대로 크롤링해서 DB에 저장할때마다 터미널에 url 출력
     for i in room_urls:
         WB.get_room_information(i)
         print(i)

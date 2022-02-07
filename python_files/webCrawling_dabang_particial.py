@@ -15,15 +15,13 @@ my_options = webdriver.ChromeOptions()
 my_options.add_argument("headless")
 
 
-
 def get_room_information(url):
     test_url = url
-
     driver = webdriver.Chrome(executable_path='chromedriver', options=my_options)
     driver.get(url=test_url)
 
     try:
-        WebDriverWait(driver, 25).until(expected_conditions.presence_of_element_located
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located
                                         ((By.CSS_SELECTOR,'#content > div > div > div:nth-child(1) > ul > li:nth-child(1) > div > h1')))
 
         def check_if_element_exists(selector):
@@ -54,12 +52,13 @@ def get_room_information(url):
         '''바로는 세부 위치 안나옴, 버튼 없다면 세부주소 없는것'''
         if (check_if_element_exists('#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ > button')):
             driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ > button').click()
-            room_location = driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ').get_attribute('innerText')
+            room_location = driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ ').get_attribute('innerText')
             driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ > button').click()
             street_name_location = driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ').get_attribute('innerText')
         else:
-            room_location = driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ').get_attribute('innerText')
+            room_location = driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div:nth-child(3) > div > div.styled__Address-sc-8pfhii-2.kmHfVJ ').get_attribute('innerText')
             street_name_location = "???"
+
 
         '''세부 정보 크롤링'''
         detailed_description = \
@@ -71,7 +70,6 @@ def get_room_information(url):
         options = []
         for i in range(1, number_of_options + 1):
             options.append(driver.find_element(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div.styled__Block-rtvnk4-2.styled__OptionBlock-sc-1m95zms-0.ftreVo.dINcLV > div:nth-child(1) > div > div:nth-child(' + str(i) + ') > p').get_attribute('innerText'))
-
         '''보안/ 안전시설 크롤링'''
         number_of_security_system_list = driver.find_elements(By.CSS_SELECTOR,'#roomDetail > div.styled__MutableWrap-sc-11huzff-2.lhOOEc > div.styled__Block-rtvnk4-2.styled__OptionBlock-sc-1m95zms-0.ftreVo.dINcLV > div:nth-child(2) > div > div')
         number_of_security_system = len(number_of_security_system_list)
@@ -87,6 +85,15 @@ def get_room_information(url):
 
         '''방향 텍스트 수정'''
         facing_where = facing_where[:-10]
+
+        #주소 뒤에 붙는 도로명,지번 같은거 지워줌 - 지도 검색 할때 방해되서 만듬
+        room_location = room_location.replace('\n도로명','')
+        room_location = room_location.replace('\n위치정보','')
+        room_location = room_location.replace('\n지번','')
+        street_name_location = street_name_location.replace('\n도로명','')
+        street_name_location = street_name_location.replace('\n위치정보','')
+        street_name_location = street_name_location.replace('\n지번','')
+
 
         informations = []
         informations.append(agent)
@@ -113,8 +120,7 @@ def get_room_information(url):
         informations.append(number_of_security_system)
         informations.extend(security_system)
 
-
-        # DB에는 숫자처럼 생긴 문자열 형태로 저장됨
+        # DB에는 리스트로 숫자처럼 생긴 문자열 형태로 저장됨
         doc = {
             '공인중개사': agent,
             '월세': monthly_pay,
@@ -139,26 +145,9 @@ def get_room_information(url):
             '보안시설 수': (number_of_security_system,security_system)
         }
 
-        # 분류 - 없을시 Room에만 등록됨
-        if agent == {'좋은집공인중개사사무소'}:
-            D = db.joh
-        elif agent == {'라라랜드공인중개사사무소'}:
-            D = db.ra
-        elif agent == {'JK공인중개사사무소'}:
-            D = db.jk
-        elif agent == {'드림공인중개사사무소'}:
-            D = db.dream
-        elif agent == {'대학로공인중개사사무소'}:
-            D = db.dae
-        elif agent == {'신성공인중개사사무소'}:
-            D = db.sinseong
-        elif agent == {'씨앨공인중개사사무소'}:
-            D = db.cl
-
         # 입력
         room = db.OneRoom
         room.insert_one(doc)
-        D.insert_one(doc)
         '''
             출력되는 리스트 순서
             공인중개사,월세, 층, 방 면적, 방 수/욕실 수, 방향, 난방종류, 빌트인,
