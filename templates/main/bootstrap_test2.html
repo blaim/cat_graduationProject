@@ -5,15 +5,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-      #temp_for_location{
-        position:absolute;
-        font-size:60px;
-        top:0;
-        left:0;
-      }
+      
       
       #all_wrap{
-        margin:5%;
+        margin:2.5%;
         width:90%;
         height:90%;
       }
@@ -37,11 +32,11 @@
       }
 
       #draw_room{
-        position:absolute;
-        margin-left:30px;
+        margin-left:10px;
+        margin-top:10px;
         width:40vw;
         height:40vw;
-        display:inline-block;
+       
         
       }
 
@@ -74,9 +69,40 @@
         height:100px;
         background-repeat: no-repeat;
         background-image: url("{%static 'svgs/trash-can-solid.svg' %}");
+        background-position:center;
         float:left;
         margin:5px;
       }
+
+      #room_main_panel{
+        float:left;
+        margin-left:100px;
+        border:1px solid #ddd
+      }
+
+      #room_text_area{
+        margin-left:10px;
+        margin-top:10px;
+        margin-bottom:10px;
+        margin-right:10px;
+        width:40vw;
+        height:40vw;
+      }
+
+      
+      /*모든 한 요소 통틀어서 여기에서 */
+      .room_element{
+        width:100px;
+        height:100px;
+      }
+
+      .furniture{
+        background-color:red;
+      }
+
+     
+
+      
       
     </style>
 
@@ -89,10 +115,6 @@
     
 </head>
 <body>
-  
-  <div id="temp_for_location">123</div>
-  <div id="temp_for_size">what</div>
-
   <div id="all_wrap" class="container-fluid">
     <div class="panel-group selecting_tools" id="accordion" role="tablist" aria-multiselectable="true">
       <div class="panel panel-default">
@@ -120,7 +142,7 @@
         </div>
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
           <div class="panel-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            <div class="room_element furniture"></div>
           </div>
         </div>
       </div>
@@ -134,18 +156,35 @@
         </div>
         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
           <div class="panel-body">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+            
           </div>
         </div>
       </div>
       
     </div>
     
-    <div id="draw_room">
-        <script type="text/javascript">
-            for (var i = 0;i<900;i++)
-                document.write('<div class="room_one_element"></div>');
-        </script>
+    <div role="tabpanel" id="room_main_panel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+          <a href="#draw_room" aria-controls="draw" role="tab" data-toggle="tab">시각화 도구</a>
+        </li>
+        <li>
+          <a href="#text_room" aria-controls="draw" role="tab" data-toggle="tab">리뷰 작성</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="draw_room">
+            <script type="text/javascript">
+                for (var i = 0;i<900;i++)
+                    document.write('<div class="room_one_element"></div>');
+            </script>
+            
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="text_room">
+          <textarea id="room_text_area" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+      </div>
+      <button type="button" class="btn btn-success btn-lg submit_button">저장</button>
     </div>
   </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -194,27 +233,31 @@
   //마우스 클릭시 x,y좌표 저장
   $(".room_one_element").mousedown(function(e){
     drag_started = 1
+
+    //강조표시 해제
+    highlight_room_structure(current_room_structure,'none')
+
     var number = $(".room_one_element").index(this);
 
     e.preventDefault()
     //0,0에서 29,29까지
-    //밑으로몇칸이 x
+    //밑으로몇칸이 x 
     //오른쪽으로 몇칸이 y
     room_structure_drag_start_x = parseInt(number/30)
     room_structure_drag_start_y = number % 30
 
 
-    change_value.innerHTML = number;
-
-    console.log(room_structure_drag_start_x)
-    console.log(room_structure_drag_start_y)
   });
 
   //마우스 끄는동안 미리보기 생성
   $(".room_one_element").mouseenter(function(e){
+   
+    
     if(current_room_structure!=-1 && drag_started==1)
     {
       var number = $(".room_one_element").index(this);
+      //배열에 있는 나머지 다시 색칠
+    print_all_room_structure()
       
       if(temp_drag_x1 != -1 && temp_drag_y1 != -1)
       {
@@ -268,6 +311,8 @@
     var y2
     var number = $(".room_one_element").index(this);
 
+    $('.room_one_element').css('border', 'none')
+
     room_structure_drag_end_x = parseInt(number/30)
     room_structure_drag_end_y = number % 30
 
@@ -299,6 +344,12 @@
       print_color("yellow", x1,y1,x2,y2)
     }
 
+    //배열에 있는 나머지 다시 색칠
+    print_all_room_structure()
+    
+
+    highlight_room_structure(current_room_structure, "5px solid black")
+    console.log(current_room_structure)
     temp_drag_x1 = -1
     temp_drag_y1 = -1
     temp_drag_x2 = -1
@@ -306,6 +357,20 @@
 
     
   });
+
+
+  //방 구조 배열 내부 모든 영역 색칠하는 함수
+  function print_all_room_structure(){
+    for(var i =0;i<room_structure_code.length;i++)
+      {
+        x1 = room_structure_code[i][0]
+        y1 = room_structure_code[i][1]
+        x2 = room_structure_code[i][2]
+        y2 = room_structure_code[i][3]
+
+        print_color("yellow", x1,y1,x2,y2)
+      }
+  }
 
 
   //지정영역 색칠하는 함수
@@ -347,26 +412,34 @@
   //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
   $(document).on('click', '.room_structure', function(e){
     e.preventDefault()
-    if(current_room_structure == $(this).index()-1)
+    if(current_room_structure == $(this).html()-1)
     {
+      highlight_room_structure(current_room_structure, "none")
       current_room_structure = -1
       $(this).css('color', 'white')
       $('.room_one_element').css('cursor', 'default')
+  
+     
     }
     else
     {
-      current_room_structure = $(this).index()-1
+      current_room_structure = $(this).html() - 1
       $('.room_structure').css('color', 'white')
+      $('.room_one_element').css('border', 'none')
       $('.room_one_element').css('cursor', 'crosshair')
       $(this).css('color', 'red')
+
+      highlight_room_structure(current_room_structure, "5px solid black")
+      
     }
+   
     console.log(current_room_structure)
   })
 
   //방구조 drag시작할때 함수
   drag_start_room_structure = function(){
     var dragging_element = event.target
-    current_dragging_element = dragging_element.innerHTML
+    current_dragging_element_html = dragging_element.innerHTML
   }
 
   //방구조 drag끝낼때 함수
@@ -382,12 +455,85 @@
   //쓰레기통에 방 구조 drop했을때 함수
   drop_room_strucutre_to_trash = function(){
     var elements = document.getElementsByClassName("room_structure")
-    console.log(elements[current_dragging_element-1])
-    elements[current_dragging_element-1].remove();
-    current_dragging_element = -1
+    elements[current_dragging_element_html-1].remove();
+    console.log("dragging")
+    console.log(current_dragging_element_html-1)
+    console.log("dragging")
 
-    //지금 innerhtml이용해서 받아오니까 하나 삭제하면 제대로 못함
+    $('.room_one_element').css('border', 'none')
+
+    //삭제한것 뒤 숫자 변경
+    //삭제한것 리스트에서 제거, 재배열
+    print_color("green", room_structure_code[current_dragging_element_html-1][0],room_structure_code[current_dragging_element_html-1][1],room_structure_code[current_dragging_element_html-1][2],room_structure_code[current_dragging_element_html-1][3])
+    for(var i=current_dragging_element_html-1; i<elements.length;i++)
+    {
+      elements[i].innerHTML = elements[i].innerHTML-1
+      room_structure_code[i] = room_structure_code[i+1]
+    }
+
+    
+
+    //방이 선택 되어 있었다면 선택 안되도록
+    if(current_room_structure!=-1)
+    {
+      current_room_structure = -1
+      $('.room_one_element').css('cursor', 'default')
+    }
+  
+    structure_number = structure_number-1
+    room_structure_code[elements.length] = 0
+    current_dragging_element_html = -1
+
+    
+    //배열에 있는 나머지 다시 색칠
+    print_all_room_structure()
+    
+    console.log(room_structure_code)
+    console.log(current_room_structure)
   }
+
+  //방 주변 강조하는 기능(방 선택 확인 용도)
+  //방 구조 리스트의 번호, border텍스트
+  highlight_room_structure = function(room_num, border_text){
+    var x1 = room_structure_code[room_num][0]
+    var y1 = room_structure_code[room_num][1]
+    var x2 = room_structure_code[room_num][2]
+    var y2 = room_structure_code[room_num][3]
+
+    //위 첫줄 : x1 * 30 + y1 ~ y2
+    for(var temp = y1;temp<=y2;temp++)
+    {
+      change_border_num = x1*30 + temp
+      $(".room_one_element").eq(change_border_num).css("border-top",border_text)
+    }
+
+    //마지막 첫줄 : x2 * 30 + y1 ~ y2
+    for(var temp = y1;temp<=y2;temp++)
+    {
+      change_border_num = x2*30 + temp
+      $(".room_one_element").eq(change_border_num).css("border-bottom",border_text)
+    }
+
+    //왼쪽 첫줄 : x1~x2*30 + y1
+    for(var temp = x1;temp<=x2;temp++)
+    {
+      change_border_num = temp*30 + y1
+      $(".room_one_element").eq(change_border_num).css("border-left",border_text)
+    }
+
+    //오른쪽 첫줄 : x1~x2*30 + y2
+    for(var temp = x1;temp<=x2;temp++)
+    {
+      change_border_num = temp*30 + y2
+      $(".room_one_element").eq(change_border_num).css("border-right",border_text)
+    }
+
+
+
+  }
+
+
+ 
 
 
 
