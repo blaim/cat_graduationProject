@@ -48,7 +48,8 @@
           float:left;
           background-color:green;
           color:green;
-          
+          pointer-events:none;
+          z-index:1;
           
       }
 
@@ -74,6 +75,8 @@
         margin:5px;
       }
 
+      
+
       #room_main_panel{
         float:left;
         margin-left:100px;
@@ -96,12 +99,62 @@
         height:100px;
       }
 
-      .furniture{
-        background-color:red;
+      .desk{
+        background-repeat: no-repeat;
+        background-image: url("{%static 'svgs/desk.svg' %}");
+        background-position:center;
+        background-size : auto;
+        float:left;
       }
 
+      .added_element{
+        z-index :10;
+        position:absolute;
+        width:2.6%;
+        height:3.0%;
+        resize:both;
+        cursor:grab;
+      }
      
-
+      /*툴팁 관련 css */
+      .tooltip_box{
+                width:10vw;
+                height:10vw;
+                position:relative;
+                display:block;
+                bottom:200px;
+                border-radius:0.5rem;
+                z-index:1;
+  
+            }
+            .size_calc{
+                width:100%;
+                height:30%;
+                background-color:blue;
+                display:flex;
+                justify-content:center;
+            }
+            .size_calc div{
+                float:left;
+                text-align:center;
+                font-size:30px;
+            }
+            .size_calc button{
+                width:30%;
+                height:70%;
+                font-size:40px;
+                text-align:center;
+                line-height:5px;
+            }
+            .specific_info{
+                width:100%;
+                height:40%;
+                background-color:green;
+            }
+            .specific_info textarea{
+              width:100%;
+              height:100%;
+            }
       
       
     </style>
@@ -136,13 +189,13 @@
         <div class="panel-heading" role="tab" id="headingTwo">
           <h4 class="panel-title text-center">
             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              다른거 메뉴
+              가구
             </a>
           </h4>
         </div>
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
           <div class="panel-body">
-            <div class="room_element furniture"></div>
+            <div class="room_element desk"></div>
           </div>
         </div>
       </div>
@@ -176,7 +229,7 @@
         <div role="tabpanel" class="tab-pane fade in active" id="draw_room">
             <script type="text/javascript">
                 for (var i = 0;i<900;i++)
-                    document.write('<div class="room_one_element"></div>');
+                    document.write('<div class="room_one_element" ondragover="allow_room_structure_drop();" ondrop="drop_room_element(event);"></div>');
             </script>
             
         </div>
@@ -193,6 +246,7 @@
   //방구조 개수 함수
   var structure_number = 1
   var current_room_structure = -1
+  var current_room_element = "none"
   var drag_started = 0
 
   //구조 드래그 시작, 끝지점 xy좌표 저장
@@ -212,6 +266,24 @@
 
   //현재 드래그하는 element
   current_dragging_element = -1
+
+  //현재 움직이고 있는 방 요소 정보
+  var current_moving_element = false
+  var current_moving_element_id = "none"
+  var current_moving_element_parent_number = -1
+  var current_moving_element_class = "none"
+  
+
+  //방 요소 추가할때 기본 width, height
+  var element_basic_width = 1.3
+  var element_basic_height = 1.5
+
+  //방 구조 요소 개수 저장
+  var room_element_num = 1
+
+  //현재 추가하는 방 구조의 번호
+  var current_room_element_id = -1
+  
 
 
   var draw_room_box = document.getElementById("draw_room")
@@ -235,11 +307,12 @@
     drag_started = 1
 
     //강조표시 해제
-    highlight_room_structure(current_room_structure,'none')
+    if(current_room_structure != -1)
+      highlight_room_structure(current_room_structure,'none')
 
     var number = $(".room_one_element").index(this);
 
-    e.preventDefault()
+    //e.preventDefault()
     //0,0에서 29,29까지
     //밑으로몇칸이 x 
     //오른쪽으로 몇칸이 y
@@ -247,12 +320,57 @@
     room_structure_drag_start_y = number % 30
 
 
-  });
+    //방 요소 추가시 실행할것
+    if(current_room_element != "none")
+    {
+      var ele = document.createElement("div")
+      ele.className = "added_element"
+      ele.id = "room_element_" + room_element_num
+      ele.dataset.width = 2
+      ele.dataset.height = 2
+      
+      
+      ele.addEventListener("mousedown", on_element_mousedown)
+      ele.addEventListener("mouseup", on_element_mouseup)
+      ele.addEventListener("click", on_element_click)
+
+      current_room_element_id = room_element_num
+      room_element_num = room_element_num + 1
+
+      ele.classList.add(current_room_element)
+
+      current_room_element = "none"
+      drag_started = false
+
+      ele.appendChild(create_room_tooltip(ele.id))
+
+      $(".room_one_element").eq(number).append(ele)
+    }
+
+ });
+
 
   //마우스 끄는동안 미리보기 생성
   $(".room_one_element").mouseenter(function(e){
-   
-    
+    e.preventDefault()
+
+
+    //방 요소 늘릴때
+    if(current_room_element != "none" && drag_started==1)
+    {
+      var cur_ele_id = "room_element_" + current_room_element_id
+      var cur_ele = document.getElementById(cur_ele_id)
+
+      //지금 드래그하는 지점의 좌표 구하기
+      var number = $(".room_one_element").index(this);
+      cur_x = parseInt(number/30)
+      cur_y = number % 30
+
+      
+    }
+
+
+    //방 구조 늘릴때
     if(current_room_structure!=-1 && drag_started==1)
     {
       var number = $(".room_one_element").index(this);
@@ -303,60 +421,91 @@
 
 
   //마우스 놓으면 시작위치부터 놓은 위치까지 색칠
-  $(".room_one_element").mouseup(function(){
-    drag_started = 0
-    var x1
-    var x2
-    var y1
-    var y2
-    var number = $(".room_one_element").index(this);
-
-    $('.room_one_element').css('border', 'none')
-
-    room_structure_drag_end_x = parseInt(number/30)
-    room_structure_drag_end_y = number % 30
-
-    if(room_structure_drag_start_x <= room_structure_drag_end_x){
-      x1 = room_structure_drag_start_x
-      x2 = room_structure_drag_end_x
-    }else{
-      x1 = room_structure_drag_end_x
-      x2 = room_structure_drag_start_x
-    }
-
-    if(room_structure_drag_start_y <= room_structure_drag_end_y){
-      y1 = room_structure_drag_start_y
-      y2 = room_structure_drag_end_y
-    }else{
-      y1 = room_structure_drag_end_y
-      y2 = room_structure_drag_start_y
-    }
-
-    if(room_structure_code[current_room_structure]==0)
-    {
-      room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
-      print_color("yellow", x1,y1,x2,y2)
-    }
-    else
-    {
-      print_color("green", room_structure_code[current_room_structure][0],room_structure_code[current_room_structure][1],room_structure_code[current_room_structure][2],room_structure_code[current_room_structure][3])
-      room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
-      print_color("yellow", x1,y1,x2,y2)
-    }
-
-    //배열에 있는 나머지 다시 색칠
-    print_all_room_structure()
+  $(".room_one_element").mouseup(function(e){
+    current_moving_element = false
+    current_room_element_id = "none"
     
 
-    highlight_room_structure(current_room_structure, "5px solid black")
-    console.log(current_room_structure)
-    temp_drag_x1 = -1
-    temp_drag_y1 = -1
-    temp_drag_x2 = -1
-    temp_drag_y2 = -1
+    //방구조 놓았을때
+    if(drag_started == 1 && current_room_structure != -1)
+    {
+      drag_started = 0
+      var x1
+      var x2
+      var y1
+      var y2
+      var number = $(".room_one_element").index(this);
 
+      $('.room_one_element').css('border', 'none')
+
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(room_structure_drag_start_x <= room_structure_drag_end_x){
+        x1 = room_structure_drag_start_x
+        x2 = room_structure_drag_end_x
+      }else{
+        x1 = room_structure_drag_end_x
+        x2 = room_structure_drag_start_x
+      }
+
+      if(room_structure_drag_start_y <= room_structure_drag_end_y){
+        y1 = room_structure_drag_start_y
+        y2 = room_structure_drag_end_y
+      }else{
+        y1 = room_structure_drag_end_y
+        y2 = room_structure_drag_start_y
+      }
+
+      if(room_structure_code[current_room_structure]==0)
+      {
+        room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+        print_color("yellow", x1,y1,x2,y2)
+      }
+      else
+      {
+        print_color("green", room_structure_code[current_room_structure][0],room_structure_code[current_room_structure][1],room_structure_code[current_room_structure][2],room_structure_code[current_room_structure][3])
+        room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+        print_color("yellow", x1,y1,x2,y2)
+      }
+
+      //배열에 있는 나머지 다시 색칠
+      print_all_room_structure()
+      
+
+      highlight_room_structure(current_room_structure, "5px solid black")
+      console.log(current_room_structure)
+      temp_drag_x1 = -1
+      temp_drag_y1 = -1
+      temp_drag_x2 = -1
+      temp_drag_y2 = -1
+    }
     
   });
+
+  //방 요소 옮기는 기능
+  //클릭하여 옮기기 시작할때
+  function on_element_mousedown(){
+    
+    var id = $(this).attr('id')
+    var parent = $(this).parent().index()
+    var element_class = $(this).attr('class')
+    var ele_width = $(this).data('width')
+    var ele_height = $(this).data('height')
+    
+    current_moving_element = true
+    current_moving_element_id = id
+    current_moving_element_class = element_class
+    current_moving_element_parent_number = parent
+    
+
+  };
+
+  function on_element_mouseup(){
+    current_moving_element = false
+  }
+
+
 
 
   //방 구조 배열 내부 모든 영역 색칠하는 함수
@@ -397,6 +546,7 @@
     new_structure.setAttribute("ondragstart","drag_start_room_structure();")
     new_structure.setAttribute("ondragend","drag_end_room_structure();")
     
+    
 
     new_structure.innerHTML = structure_number
     structure_number = structure_number+1
@@ -412,17 +562,20 @@
   //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
   $(document).on('click', '.room_structure', function(e){
     e.preventDefault()
+
+ 
     if(current_room_structure == $(this).html()-1)
     {
+      $('.room_one_element').css("pointer-events", "none")
       highlight_room_structure(current_room_structure, "none")
       current_room_structure = -1
       $(this).css('color', 'white')
       $('.room_one_element').css('cursor', 'default')
-  
-     
+   
     }
     else
     {
+      $('.room_one_element').css("pointer-events", "auto")
       current_room_structure = $(this).html() - 1
       $('.room_structure').css('color', 'white')
       $('.room_one_element').css('border', 'none')
@@ -450,15 +603,44 @@
   //드래그 드랍 허용하도록 설정
   allow_room_structure_drop = function(){
     event.preventDefault()
+
+  }
+
+  //방 요소 위치 옮기고 드랍하는 함수
+  drop_room_element = function(event){
+    console.log($(event.target).index())
+
+    var moving_ele = document.getElementById(current_moving_element_id)
+
+    var cur_width = moving_ele.dataset.width
+    var cur_height = moving_ele.dataset.height
+
+
+    $("#"+current_moving_element_id).remove()
+
+    //다른쪽에 추가할 요소
+    var ele = document.createElement("div")
+    ele.className = current_moving_element_class
+    ele.id = "room_element_" + current_moving_element_id
+    ele.dataset.width = cur_width
+    ele.dataset.height = cur_height
+    ele.style.width = (cur_width * element_basic_width) + "%"
+    ele.style.height = (cur_height * element_basic_height) + "%"
+
+    ele.addEventListener("mousedown", on_element_mousedown)
+    ele.addEventListener("click", on_element_click)
+
+    ele.appendChild(create_room_tooltip(ele.id))
+
+    $(event.target).append(ele)
   }
   
   //쓰레기통에 방 구조 drop했을때 함수
   drop_room_strucutre_to_trash = function(){
     var elements = document.getElementsByClassName("room_structure")
     elements[current_dragging_element_html-1].remove();
-    console.log("dragging")
-    console.log(current_dragging_element_html-1)
-    console.log("dragging")
+    
+
 
     $('.room_one_element').css('border', 'none')
 
@@ -528,15 +710,134 @@
       $(".room_one_element").eq(change_border_num).css("border-right",border_text)
     }
 
-
-
   }
 
+  //추가된 요소 클릭할때 툴팁 나타내는 함수
+  on_element_click = function(event){
+   
+    
+    var child = event.target.querySelector('div')
+    console.log(child)
+    if(child != null)
+    {
+      console.log(child.style.visibility)
+      if(child.style.display == "none")
+      {
+        child.style.display = "block"
+      }
+      else
+      {
+        child.style.display = "none"
+      }
+      
+    }
+  }
+
+  //툴팁 생성하는 함수
+  create_room_tooltip = function(id){
+    //툴팁 전체 묶는거
+    var ele = document.createElement("div")
+    ele.className = "tooltip_box"
+    ele.dataset.id = id
+    //width로 초기화 필요
+
+    ele.style.opacity = "1"
+    
+    //사이즈 조절하는 위 div 묶는것
+    var size_calc = document.createElement("div")
+    size_calc.className = "size_calc"
+
+    var size_calc_div = document.createElement("div")
+    size_calc_div.innerHTML = 1
+
+    var minus_button = document.createElement("button")
+    minus_button.innerHTML = "-"
+    minus_button.className = "btn btn-primary"
+    minus_button.dataset.id = id
+    minus_button.addEventListener("click", element_size_minus)
+    var plus_button = document.createElement("button")
+    plus_button.innerHTML = "+"
+    plus_button.addEventListener("click", element_size_plus)
+    plus_button.className = "btn btn-primary"
+    plus_button.dataset.id = id
+
+    //상세정보 적는 textarea 넣는 div
+    var specific_box_div = document.createElement("div")
+    specific_box_div.className = "specific_info"
+
+    var specific_textbox = document.createElement("textarea")
+    specific_textbox.className = "form-control"
+
+    //연결
+    size_calc.appendChild(size_calc_div)
+    size_calc.appendChild(minus_button)
+    size_calc.appendChild(plus_button)
+
+    specific_box_div.appendChild(specific_textbox)
+
+    ele.appendChild(size_calc)
+    ele.appendChild(specific_box_div)
+
+    return ele
+  }
+
+  //요소 크기 작게하는 함수
+  element_size_minus = function(event){
+    if(event.target.dataset.id != null)
+    {
+      var cur_element = document.getElementById(event.target.dataset.id)
+
+      if(cur_element.dataset.width > 1)
+      {
+        cur_element.dataset.width = parseInt(cur_element.dataset.width) -1
+        cur_element.dataset.height = parseInt(cur_element.dataset.height) -1
+
+
+        cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
+        cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
+      }
+      
+    }
+  }
+
+  //요소 크기 크게하는 함수
+  element_size_plus = function(event){
+    if(event.target.dataset.id != null)
+    {
+      var cur_element = document.getElementById(event.target.dataset.id)
+
+      if(cur_element.dataset.width < 6)
+      {
+        cur_element.dataset.width = parseInt(cur_element.dataset.width) +1
+        cur_element.dataset.height = parseInt(cur_element.dataset.height) +1
+
+
+        cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
+        cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
+      }
+      
+    }
+  }
 
  
+  //방 요소 클릭시 선택되도록
+  $(".room_element").click(function(e){
+    
+    if(current_room_element=="none")
+    {
+      $('.room_one_element').css("pointer-events", "auto")
+      current_room_element = $(this).attr("class").substr(13)
+    }
+    else
+    {
+      $('.room_one_element').css("pointer-events", "none")
+      current_room_element = "none"
+    }
+    console.log(current_room_element)
 
+ });
 
-
+ 
 
   
   
