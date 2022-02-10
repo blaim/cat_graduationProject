@@ -5,6 +5,8 @@
     <script type="text/javascript">
     Kakao.init('9bbfbba5ae61bfb9494771bd71ad837b');
     Kakao.isInitialized();
+    if (!Kakao.Auth.getAccessToken())
+    Kakao.Auth.setAccessToken('{{access_token}}')
       function checkAccessToken(){
         console.log(Kakao.Auth.getAccessToken());
       }
@@ -14,8 +16,10 @@
           console.log('Not logged in.');
           return;
         }
+        ///아래는 로그아웃 함수이다.
         Kakao.Auth.logout(function() {
           console.log(Kakao.Auth.getAccessToken());
+          location.href='http://127.0.0.1:8000'; ///메인 페이지로 이동시킨다.
         });
       }
     </script>

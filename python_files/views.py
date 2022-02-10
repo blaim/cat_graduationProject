@@ -19,18 +19,21 @@ def home(request):
     return render(request, 'home.html')
 
 def top(request):
+    #22~34번 줄이 토큰 만료 여부 확인하는 코드
     token = request.COOKIES.get('token')
     id=None
     access_token=None
     nickname=None
-    if token != 'None' and token != None: #기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
+    if token != 'None' and token != None : #기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
         id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
         access_token = userChecker.checkToken(id)
         nickname = userChecker.checkNickname(id)
-        if access_token != None:
+        if access_token != None and access_token != 'none':
             a = requests.get('https://kapi.kakao.com/v1/user/access_token_info', headers={"Authorization": f'Bearer ${access_token}'})
             if (a == -401): #토큰이 만료되어 있다면 토큰이 없다고 체크한다.
                 token='None'
+        else:
+            token = 'None'
     if token == 'None': #토큰이 없을 경우 발급받는다.
         code = request.GET['code']
         grant_type = 'authorization_code'
@@ -58,7 +61,7 @@ def top(request):
             userChecker.addUser(userID, nickname)
         id = userChecker.checkID(userID)
         # 발급받은 토큰을 저장한다.
-        userChecker.setToken(id, access_token)
+        userChecker.setToken(ObjectId(id), access_token)
         data = {'id': id}
         token = jwt.encode(data, SECRET_KEY, ALGORITHM) #jwt 토큰 획득
     res = render(request, 'main/top.html', {'access_token':access_token, 'nickname':nickname})

@@ -16,8 +16,12 @@ def view(request):
         nickname = userChecker.checkNickname(id)
         if (access_token!=None):
             a = requests.get('https://kapi.kakao.com/v1/user/access_token_info', headers={"Authorization": f'Bearer ${access_token}'})
-            if a==-401: #토큰이 만료되었다면 토큰을 없는 것으로 처리한다.
-                token = None
+            if a.json().get('id') == None:# 토큰이 죽어있다면 None을 반환한다.
+                if a.json()['code']==-401: #토큰이 만료되었다면 토큰을 없는 것으로 처리한다.
+                    token = None
+                    tokenAlive='False'
+        else :
+            tokenAlive='False'
     if token=='None' or token == None:
         tokenAlive='False'
     # render 함수에서 세 번째 인자가 context이고, 그걸로 token의 활성화 여부를 보낸다.
