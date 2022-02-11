@@ -14,7 +14,6 @@ def home(request):
     token = request.COOKIES.get('token')
     if (token):
         access_token = jwt.decode(token, SECRET_KEY, ALGORITHM)
-        print(access_token['user_id'])
         return render(request, 'home.html', {'nickname':'김경태'})
     return render(request, 'home.html')
 
@@ -22,16 +21,17 @@ def top(request):
     #22~34번 줄이 토큰 만료 여부 확인하는 코드
     token = request.COOKIES.get('token')
     id=None
-    access_token=None
-    nickname=None
+    access_token='none'
+    nickname='none'
     if token != 'None' and token != None : #기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
         id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
         access_token = userChecker.checkToken(id)
         nickname = userChecker.checkNickname(id)
         if access_token != None and access_token != 'none':
             a = requests.get('https://kapi.kakao.com/v1/user/access_token_info', headers={"Authorization": f'Bearer ${access_token}'})
-            if (a == -401): #토큰이 만료되어 있다면 토큰이 없다고 체크한다.
-                token='None'
+            if a.json().get('id') == None:  # 토큰이 죽어있다면 None을 반환한다.
+                if a.json()['code'] == -401:
+                    token='None'
         else:
             token = 'None'
     if token == 'None': #토큰이 없을 경우 발급받는다.

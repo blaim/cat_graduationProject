@@ -11,15 +11,13 @@
         console.log(Kakao.Auth.getAccessToken());
       }
       function kakaoLogout() {
-        console.log(Kakao.Auth.getAccessToken())
         if (!Kakao.Auth.getAccessToken()) {
           console.log('Not logged in.');
           return;
         }
         ///아래는 로그아웃 함수이다.
         Kakao.Auth.logout(function() {
-          console.log(Kakao.Auth.getAccessToken());
-          location.href='http://127.0.0.1:8000'; ///메인 페이지로 이동시킨다.
+            location.href='https://kauth.kakao.com/oauth/logout?client_id=10ecf0439a675841802b2143335b994e&logout_redirect_uri=http://127.0.0.1:8000'; ///메인 페이지로 이동시킨다.
         });
       }
     </script>
