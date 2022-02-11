@@ -56,7 +56,7 @@
         /* 검색바 관련 css */
         #search_bar{
             z-index:1;
-
+            height:0%;
         }
 
 
@@ -67,21 +67,11 @@
             width:100%;
             height:100%;
         }
-
     </style>
     <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script type="text/javascript" src="{%static 'js/login.js' %}"></script>
 </head>
 <body>
-
-<div id="search_bar"></div>
-<div id="minimal_box" onclick="minimalize_box()"></div>
-<div id="left_binding">
-    <div id="login_box"></div>
-    <div id="new_reviews_box"></div>
-    <div id="write_review_box"></div>
-</div>
-
     <div id="search_bar"></div>
     <div id="minimal_box" onclick="minimalize_box()"></div>
     <div id="left_binding">
@@ -103,7 +93,6 @@
         <div id="new_reviews_box"></div>
         <div id="write_review_box"></div>
     </div>
-
 <div id="map"></div>
 <div id="clickLatlng"></div>
     <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
@@ -135,7 +124,7 @@ geocoder.addressSearch('충청북도 청주시 흥덕구 복대동 1580', functi
 		message += result[0].x + ')';
 
 		var resultDiv = document.getElementById('clickLatlng');
-		resultDiv.innerHTML = message;
+		//resultDiv.innerHTML = message;  // 이 부분은 좌표 확인용 코드로, 주석 처리를 해제하면 페이지 가장 아래에 좌표가 출력됨.
 
         // 결과값 위치를 마커로 표시
         var marker = new kakao.maps.Marker({
@@ -154,21 +143,21 @@ geocoder.addressSearch('충청북도 청주시 흥덕구 복대동 1580', functi
     }
 });
 </script>
-    <script>
-        is_hidden = 0;
-        function minimalize_box(){
-            var container = document.getElementById("left_binding");
-            if(is_hidden == 0)
-            {
-                container.style.visibility = "hidden";
-                is_hidden = 1;
-            }
-            else{
-                container.style.visibility = "visible";
-                is_hidden = 0;
-            }
-
+<script>
+    is_hidden = 0;
+    function minimalize_box(){
+        var container = document.getElementById("left_binding");
+        if(is_hidden == 0)
+        {
+            container.style.visibility = "hidden";
+            is_hidden = 1;
         }
-    </script>
+        else{
+            container.style.visibility = "visible";
+            is_hidden = 0;
+        }
+
+    }
+</script>
 </body>
 </html>
