@@ -8,7 +8,8 @@ class userInformation:
         self.connection = MongoClient(self.host, int(self.port))
         self.db=self.connection['userInfo']
         self.udb=self.db['users']
-        self.udb.insert_one({'userId':'none'})
+        if self.udb == None:
+            self.udb.insert_one({'userId':'none'})
 
     def checkUserDB(self, userID):
         if self.udb.find_one({'userId':userID})==None:
