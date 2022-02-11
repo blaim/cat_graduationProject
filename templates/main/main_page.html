@@ -56,7 +56,7 @@
         /* 검색바 관련 css */
         #search_bar{
             z-index:1;
-            height:0%;
+
         }
 
 
@@ -76,7 +76,7 @@
     <div id="minimal_box" onclick="minimalize_box()"></div>
     <div id="left_binding">
         <div id="login_box">
-            <p id="NickName">{{nickname}}님, 환영합니다.</p>
+            <span id="NickName">{{nickname}}님, 환영합니다.</span>
             <a id="loginButton" href="javascript:void(0);" onclick="logintest()"><img src = "{%static 'images/loginimage.png' %}" alt="login"></a>
             <script type="text/javascript">
                 var tokenAlive = '{{tokenAlive}}';
