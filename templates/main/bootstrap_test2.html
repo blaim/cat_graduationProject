@@ -739,7 +739,7 @@
     var ele = document.createElement("div")
     ele.className = "tooltip_box"
     ele.dataset.id = id
-    //width로 초기화 필요
+   
 
     ele.style.opacity = "1"
     
@@ -748,7 +748,18 @@
     size_calc.className = "size_calc"
 
     var size_calc_div = document.createElement("div")
-    size_calc_div.innerHTML = 1
+    
+    if(document.getElementById(id)== null)
+    {
+      //처음 추가하는 경우
+      size_calc_div.innerHTML = 1
+    }
+    else
+    {
+      //옮기는 경우
+      size_calc_div.innerHTML = document.getElementById(id).dataset.width
+    }
+    
 
     var minus_button = document.createElement("button")
     minus_button.innerHTML = "-"
@@ -795,6 +806,8 @@
 
         cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
         cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
+
+        console.log(cur_element.children[0][0])
       }
       
     }
