@@ -5,99 +5,924 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        body{
-            margin:0;
-        }
+      
+      
+      #all_wrap{
+        margin:2.5%;
+        width:90%;
+        height:90%;
+      }
+      .selecting_tools{
+        float:left;
+        margin:0;
+        width:30%;
+      }
 
-        .container{
-            background-color: #333;
-            padding:1rem;
-            margin-top:1rem;
-        }
+      #add_room{
+        width:100px;
+        height:100px;
+        background-color:rgb(145, 145, 145);
+        color:rgb(224, 224, 224);
+        border:8px dashed grey;
+        font-size:60px;
+        text-align:center;
+        margin:5px;
+        cursor:pointer;
+        float:left;
+      }
 
-        .draggable{
-            padding:1rem;
-            background-color:white;
-            border:1px solid black;
-            cursor:move;
-        }
+      #draw_room{
+        margin-left:10px;
+        margin-top:10px;
+        width:40vw;
+        height:40vw;
+       
+        
+      }
 
-        <!--드래그할때 투명도 설정 --->
-        .draggable.dragging{
-            opacity: .5;
-        }
+    
+
+      .room_one_element{
+          width:3.3%;
+          height:3.3%;
+          float:left;
+          background-color:green;
+          color:green;
+          pointer-events:none;
+          z-index:1;
+          
+          
+      }
+
+      .room_structure{
+        width:100px;
+        height:100px;
+        background-color:black;
+        color:white;
+        cursor:default;
+        font-size:70px;
+        text-align:center;
+        float:left;
+        margin:5px;
+      }
+
+      .trash_can{
+        width:100px;
+        height:100px;
+        background-repeat: no-repeat;
+        background-image: url("{%static 'svgs/trash-can-solid.svg' %}");
+        background-position:center;
+        float:left;
+        margin:5px;
+      }
+
+      
+
+      #room_main_panel{
+        float:left;
+        margin-left:100px;
+        border:1px solid #ddd
+      }
+
+      #room_text_area{
+        margin-left:10px;
+        margin-top:10px;
+        margin-bottom:10px;
+        margin-right:10px;
+        width:40vw;
+        height:40vw;
+      }
+
+      
+      /*모든 한 요소 통틀어서 여기에서 */
+      
+      .room_element{
+        width:100px;
+        height:100px;
+      }
+
+      .desk{
+        background-repeat: no-repeat;
+        background-image: url("{%static 'svgs/desk.svg' %}");
+        background-position:center;
+        background-size : auto;
+        float:left;
+      }
+
+      .added_element{
+        z-index :10;
+        opacity:1;
+        position:absolute;
+        /*width:2.6%;
+        height:3.0%;
+        기본 값*/
+        width:0%;
+        height:0%;
+        resize:both;
+        cursor:grab;
+        transition: all 1s;
+      }
+     
+      /*툴팁 관련 css */
+      .tooltip_box{
+                width:10vw;
+                height:10vw;
+                position:relative;
+                display:none;
+                right:3vm;
+                border-radius:0.5rem;
+                z-index:1;
+  
+            }
+            .size_calc{
+                width:100%;
+                height:30%;
+                background-color:blue;
+                display:flex;
+                justify-content:center;
+            }
+            .size_calc div{
+                float:left;
+                text-align:center;
+                font-size:30px;
+            }
+            .size_calc button{
+                width:30%;
+                height:70%;
+                font-size:40px;
+                text-align:center;
+                line-height:5px;
+            }
+            .size_calc .delete_button{
+                width:30%;
+                height:70%;
+                background-repeat: no-repeat;
+                background-image: url("{%static 'svgs/trash-can-solid.svg' %}");
+                background-position:center;
+                float:left;
+            }
+            .specific_info{
+                width:100%;
+                height:40%;
+                background-color:green;
+            }
+            .specific_info textarea{
+              width:100%;
+              height:100%;
+            }
+
+    
+      
+      
     </style>
+
+    <link rel="stylesheet" href="{%static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{%static 'css/bootstrap.vertical-tabs.min.css' %}">
+    <link rel="stylesheet" href="{%static 'css/all.css' %}">
+    <link rel="stylesheet" href="{%static 'js/all.js' %}">
+
+
+    
 </head>
 <body>
-    <div class="container">
-        <p class="draggable" draggable="true">1</p>
-        <p class="draggable" draggable="true">2</p>
+    <div>nickname={{ nickname }}</div>
+  <div id="all_wrap" class="container-fluid">
+    <div class="panel-group selecting_tools" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title text-center">
+            <a data-toggle="collapse" id="add_room_structure_tab" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              방 추가
+            </a>
+          </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div id="room_add_parent" class="panel-body">
+            <div id="add_room">+</div>
+            <div class="trash_can" ondragover="allow_room_structure_drop();" ondrop="drop_room_strucutre_to_trash();"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title text-center">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              가구
+            </a>
+          </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+            <div class="room_element desk"></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title text-center">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              다른거 메뉴
+            </a>
+          </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+            
+          </div>
+        </div>
+      </div>
+      
     </div>
-    <div class="container">
-        <p class="draggable" draggable="true">3</p>
-        <p class="draggable" draggable="true">4</p>
+    
+    <div role="tabpanel" id="room_main_panel">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active">
+          <a href="#draw_room" aria-controls="draw" role="tab" data-toggle="tab">시각화 도구</a>
+        </li>
+        <li>
+          <a href="#text_room" aria-controls="draw" role="tab" data-toggle="tab">리뷰 작성</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active" id="draw_room">
+            <script type="text/javascript">
+                for (var i = 0;i<900;i++)
+                    document.write('<div class="room_one_element" ondragover="allow_room_structure_drop();"  ondrop="drop_room_element(event);"></div>');
+            </script>
+            
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="text_room">
+          <textarea id="room_text_area" class="form-control" cols="30" rows="10"></textarea>
+        </div>
+      </div>
+      <button type="button" class="btn btn-success btn-lg submit_button">저장</button>
     </div>
+  </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{%static 'js/bootstrap.js' %}"></script>
+<script>
+  //방구조 개수 함수
+  var structure_number = 1
+  var current_room_structure = -1
+  var current_room_element = "none"
+  var drag_started = 0
+
+  //구조 드래그 시작, 끝지점 xy좌표 저장
+  var room_sturcture_drag_start_x
+  var room_structure_drag_start_y
+  var room_sturcture_drag_end_x
+  var room_structure_drag_end_y
+
+  //드래그시 미리보기 좌표 네개
+  var temp_drag_x1 = -1
+  var temp_drag_y1 = -1
+  var temp_drag_x2 = -1
+  var temp_drag_y2 = -1
+
+  //코드 저장하는 배열 4개 단위로 저장
+  var room_structure_code = []
+
+  //현재 드래그하는 element
+  current_dragging_element = -1
+
+  //현재 움직이고 있는 방 요소 정보
+  var current_moving_element = false
+  var current_moving_element_id = "none"
+  var current_moving_element_parent_number = -1
+  var current_moving_element_class = "none"
+  
+
+  //방 요소 추가할때 기본 width, height
+  var element_basic_width = 1.3
+  var element_basic_height = 1.5
+
+  //방 구조 요소 개수 저장
+  var room_element_num = 1
+
+  //현재 추가하는 방 구조의 번호
+  var current_room_element_id = -1
+  
 
 
-    <script>
-    const draggables = document.querySelectorAll('.draggable')
-    const containers = document.querySelectorAll('.container')
+  var draw_room_box = document.getElementById("draw_room")
+  var change_value = document.getElementById("temp_for_location")
 
-    draggables.forEach(draggable =>{
-        draggable.addEventListener('dragstart', ()=>{
-            draggable.classList.add('dragging')
-        })
+  
 
-        draggable.addEventListener('dragend', ()=>{
-            draggable.classList.remove('dragging')
-        })
-    })
+  function get_size(){
+    var size = document.getElementById("temp_for_size")
+    size.innerHTML = "width : " + draw_box_width + ", height : "+ draw_box_height;
+  }
 
-    containers.forEach(container=>{
-        <!-- 드래그 하고 있는것 -->
-        container.addEventListener('dragover', e =>{
-            <!-- 커서 옮길때 금지 표시 삭제 -->
-            e.preventDefault()
-            <!--clientY로 뷰포트 내부 마우스 위치 알 수 있음(instanceOfMouseEvent.cilentY)-->
-            
-            const afterElement = getDragAfterElement(container, e.clientY)
-            const draggable = document.querySelector('.dragging')
+  function change_color(event){
+    var text = event.target.textContent
+    console.log(text)
+  }
+  
 
-            if(afterElement == null){
-                container.appendChild(draggable)
-            }else{
-                container.insertBefore(draggable, afterElement)
-            }
-            
-        })
-    })
+  //마우스 클릭시 x,y좌표 저장
+  $(".room_one_element").mousedown(function(e){
+    if(document.getElementById("add_room_structure_tab").ariaExpanded == "true")
+      drag_started = 1
 
-    function getDragAfterElement(container, y){
-        <!--지금 드래그 하는 요소 제외한 나머지 -->
-        const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')]
-        
-        <!--마우스와 상호작용하는 하나의 div-->
-        <!--closest: 줄이는것-->
-        <!--배열 각 요소 대한 reducer 함수 실행-->
-        <!--다른것들 child-->
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect()
-            const offset = y - box.top - box.height / 2
-            console.log(offset)
-            
-            <!--offset이 음수이면, 해당 div의 아래로 내려왔다는 뜻-->
-            <!--양수이면서 가장 가까우면-->
-            if(offset<0 && offset > closest.offset){
-                return{offset:offset, element:child}
-            } else{
-                return closest
-            }
-            <!--default값보다 처음값 항상 크도록-->
-        }, {offset: Number.NEGATIVE_INFINITY}).element
-        
+    //강조표시 해제
+    if(current_room_structure != -1)
+      highlight_room_structure(current_room_structure,'none')
+
+    var number = $(".room_one_element").index(this);
+
+    //e.preventDefault()
+    //0,0에서 29,29까지
+    //밑으로몇칸이 x 
+    //오른쪽으로 몇칸이 y
+    room_structure_drag_start_x = parseInt(number/30)
+    room_structure_drag_start_y = number % 30
+
+
+    //방 요소 추가시 실행할것
+    if(current_room_element != "none")
+    {
+      var ele = document.createElement("div")
+      ele.className = "added_element"
+      ele.id = "room_element_" + room_element_num
+      ele.dataset.width = 2
+      ele.dataset.height = 2
+      
+      
+      ele.addEventListener("mousedown", on_element_mousedown)
+      ele.addEventListener("mouseup", on_element_mouseup)
+      ele.addEventListener("click", on_element_click)
+
+      current_room_element_id = room_element_num
+      room_element_num = room_element_num + 1
+
+      ele.classList.add(current_room_element)
+
+      current_room_element = "none"
+      drag_started = false
+
+      ele.appendChild(create_room_tooltip(ele.id))
+
+      //방 요소 위치따라 툴팁 위치 조정
+      if(number < 450)
+      {
+        ele.children[0].style.top = "13vw"
+        ele.children[0].style.right = "3vw"
+      }
+      else
+      {
+        ele.children[0].style.bottom = "13vw"
+        ele.children[0].style.right = "3vw"
+      }
+
+      
+
+      $(".room_one_element").eq(number).append(ele)
+
+      $(ele).animate({
+        width:'2.6%', height:'3.0%'
+      },100)
     }
-    </script>
+
+ });
+
+
+  //마우스 끄는동안 미리보기 생성
+  $(".room_one_element").mouseenter(function(e){
+    e.preventDefault()
+
+    //방 구조 늘릴때
+    if(current_room_structure!=-1 && drag_started==1)
+    {
+      var number = $(".room_one_element").index(this);
+      //배열에 있는 나머지 다시 색칠
+      print_all_room_structure()
+      
+      if(temp_drag_x1 != -1 && temp_drag_y1 != -1)
+      {
+        print_color("green", temp_drag_x1,temp_drag_y1,temp_drag_x2,temp_drag_y2)
+      }
+
+      e.preventDefault()
+      var x1
+      var x2
+      var y1
+      var y2
+      var number = $(".room_one_element").index(this);
+
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(room_structure_drag_start_x <= room_structure_drag_end_x){
+        x1 = room_structure_drag_start_x
+        x2 = room_structure_drag_end_x
+      }else{
+        x1 = room_structure_drag_end_x
+        x2 = room_structure_drag_start_x
+      }
+
+      if(room_structure_drag_start_y <= room_structure_drag_end_y){
+        y1 = room_structure_drag_start_y
+        y2 = room_structure_drag_end_y
+      }else{
+        y1 = room_structure_drag_end_y
+        y2 = room_structure_drag_start_y
+      }
+
+      temp_drag_x1 = x1
+      temp_drag_y1 = y1
+      temp_drag_x2 = x2
+      temp_drag_y2 = y2
+
+      print_color("red", x1,y1,x2,y2)
+    }
+    
+  });
+
+
+
+  //마우스 놓으면 시작위치부터 놓은 위치까지 색칠
+  $(".room_one_element").mouseup(function(e){
+    current_moving_element = false
+    current_room_element_id = "none"
+    
+
+    //방구조 놓았을때
+    if(drag_started == 1 && current_room_structure != -1)
+    {
+      drag_started = 0
+      var x1
+      var x2
+      var y1
+      var y2
+      var number = $(".room_one_element").index(this);
+
+      $('.room_one_element').css('border', 'none')
+
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(room_structure_drag_start_x <= room_structure_drag_end_x){
+        x1 = room_structure_drag_start_x
+        x2 = room_structure_drag_end_x
+      }else{
+        x1 = room_structure_drag_end_x
+        x2 = room_structure_drag_start_x
+      }
+
+      if(room_structure_drag_start_y <= room_structure_drag_end_y){
+        y1 = room_structure_drag_start_y
+        y2 = room_structure_drag_end_y
+      }else{
+        y1 = room_structure_drag_end_y
+        y2 = room_structure_drag_start_y
+      }
+
+      if(room_structure_code[current_room_structure]==0)
+      {
+        room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+        print_color("yellow", x1,y1,x2,y2)
+      }
+      else
+      {
+        print_color("green", room_structure_code[current_room_structure][0],room_structure_code[current_room_structure][1],room_structure_code[current_room_structure][2],room_structure_code[current_room_structure][3])
+        room_structure_code[current_room_structure] = new Array(x1,y1,x2,y2)
+        print_color("yellow", x1,y1,x2,y2)
+      }
+
+      //배열에 있는 나머지 다시 색칠
+      print_all_room_structure()
+      
+
+      highlight_room_structure(current_room_structure, "5px solid black")
+      console.log(current_room_structure)
+      temp_drag_x1 = -1
+      temp_drag_y1 = -1
+      temp_drag_x2 = -1
+      temp_drag_y2 = -1
+    }
+    
+  });
+
+  //방 요소 옮기는 기능
+  //클릭하여 옮기기 시작할때
+  function on_element_mousedown(){
+    
+    
+    var id = $(this).attr('id')
+    var parent = $(this).parent().index()
+    var element_class = $(this).attr('class')
+    var ele_width = $(this).data('width')
+    var ele_height = $(this).data('height')
+
+  
+    
+    current_moving_element = true
+    current_moving_element_id = id
+    current_moving_element_class = element_class
+    current_moving_element_parent_number = parent
+      
+    
+    
+    
+
+  };
+
+  function on_element_mouseup(){
+    current_moving_element = false
+  }
+
+
+
+
+  //방 구조 배열 내부 모든 영역 색칠하는 함수
+  function print_all_room_structure(){
+    for(var i =0;i<room_structure_code.length;i++)
+      {
+        x1 = room_structure_code[i][0]
+        y1 = room_structure_code[i][1]
+        x2 = room_structure_code[i][2]
+        y2 = room_structure_code[i][3]
+
+        print_color("yellow", x1,y1,x2,y2)
+      }
+  }
+
+
+  //지정영역 색칠하는 함수
+  function print_color(color, startx, starty, endx, endy){
+    for(var tempx = startx;tempx<=endx;tempx++)
+    {
+      for(var tempy = starty;tempy<=endy;tempy++)
+      {
+        change_color_num = tempx * 30 + tempy
+        $(".room_one_element").eq(change_color_num).css("background-color",color)    
+      }
+    }
+  }
+
+  
+
+  //방 구조 추가하고, 쓰는 도구 다르게
+  //방 번호마다 다른 드래그 하도록 설계한다
+  $("#add_room").click(function(){
+    
+    var new_structure = document.createElement("div")
+    new_structure.className = "room_structure"
+    new_structure.draggable = "true"
+    new_structure.setAttribute("ondragstart","drag_start_room_structure();")
+    new_structure.setAttribute("ondragend","drag_end_room_structure();")
+    
+    
+
+    new_structure.innerHTML = structure_number
+    structure_number = structure_number+1
+
+    var parent = document.getElementById("room_add_parent")
+    room_structure_code.push(0);
+    console.log(room_structure_code)
+
+    parent.appendChild(new_structure);
+    
+  });
+
+  //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
+  $(document).on('click', '.room_structure', function(e){
+    e.preventDefault()
+
+    
+    if(current_room_structure == $(this).html()-1)
+    {
+      $('.room_one_element').css("pointer-events", "none")
+      highlight_room_structure(current_room_structure, "none")
+      current_room_structure = -1
+      $(this).css('color', 'white')
+      $('.room_one_element').css('cursor', 'default')
+   
+    }
+    else
+    {
+      $('.room_one_element').css("pointer-events", "auto")
+      current_room_structure = $(this).html() - 1
+      $('.room_structure').css('color', 'white')
+      $('.room_one_element').css('border', 'none')
+      $('.room_one_element').css('cursor', 'crosshair')
+      $(this).css('color', 'red')
+
+      highlight_room_structure(current_room_structure, "5px solid black")
+      
+    }
+   
+    console.log(current_room_structure)
+  })
+
+  //방구조 drag시작할때 함수
+  drag_start_room_structure = function(){
+    var dragging_element = event.target
+    current_dragging_element_html = dragging_element.innerHTML
+  }
+
+  //방구조 drag끝낼때 함수
+  drag_end_room_structure = function(){
+    
+  }
+
+  //드래그 드랍 허용하도록 설정
+  allow_room_structure_drop = function(){
+    event.preventDefault()
+
+  }
+
+  //방 요소 위치 옮기고 드랍하는 함수
+  drop_room_element = function(event){
+    console.log($(event.target).index())
+    var cur_element_location = $(event.target).index()-1
+
+    var moving_ele = document.getElementById(current_moving_element_id)
+
+    var cur_width = moving_ele.dataset.width
+    var cur_height = moving_ele.dataset.height
+
+    var textarea_value = moving_ele.children[0].children[1].children[0].value
+
+    //들어갈 수 있는 크기일때만 옮긴다
+    if(((cur_element_location-30) + (parseInt(cur_width))*30) <=900
+      && ((cur_element_location%30)+(parseInt(cur_width))<=30))
+      {
+        $("#"+current_moving_element_id).remove()
+
+        //다른쪽에 추가할 요소
+        var ele = document.createElement("div")
+        ele.className = current_moving_element_class
+        ele.id = "room_element_" + current_moving_element_id
+        ele.dataset.width = cur_width
+        ele.dataset.height = cur_height
+        ele.style.width = (cur_width * element_basic_width) + "%"
+        ele.style.height = (cur_height * element_basic_height) + "%"
+
+        ele.addEventListener("mousedown", on_element_mousedown)
+        ele.addEventListener("click", on_element_click)
+
+        ele.appendChild(create_room_tooltip(ele.id))
+
+        if($(event.target).index() <450)
+          {
+            ele.children[0].style.top = "13vw"
+            ele.children[0].style.right = "3vw"
+          }
+          else
+          {
+            ele.children[0].style.bottom = "13vw"
+            ele.children[0].style.right = "3vw"
+          }
+
+        ele.children[0].children[0].children[0].innerHTML = cur_width
+        ele.children[0].children[1].children[0].value = textarea_value
+    
+
+        $(event.target).append(ele)
+
+        $(ele).animate({
+        width:(cur_width * element_basic_width) + "%", height:(cur_height * element_basic_height) + "%"
+      },100)
+      }
+
+    
+  }
+  
+  //쓰레기통에 방 구조 drop했을때 함수
+  drop_room_strucutre_to_trash = function(){
+    var elements = document.getElementsByClassName("room_structure")
+    elements[current_dragging_element_html-1].remove();
+    
+
+
+    $('.room_one_element').css('border', 'none')
+
+    //삭제한것 뒤 숫자 변경
+    //삭제한것 리스트에서 제거, 재배열
+    print_color("green", room_structure_code[current_dragging_element_html-1][0],room_structure_code[current_dragging_element_html-1][1],room_structure_code[current_dragging_element_html-1][2],room_structure_code[current_dragging_element_html-1][3])
+    for(var i=current_dragging_element_html-1; i<elements.length;i++)
+    {
+      elements[i].innerHTML = elements[i].innerHTML-1
+      room_structure_code[i] = room_structure_code[i+1]
+    }
+
+    
+
+    //방이 선택 되어 있었다면 선택 안되도록
+    if(current_room_structure!=-1)
+    {
+      current_room_structure = -1
+      $('.room_one_element').css('cursor', 'default')
+    }
+  
+    structure_number = structure_number-1
+    room_structure_code[elements.length] = 0
+    current_dragging_element_html = -1
+
+    
+    //배열에 있는 나머지 다시 색칠
+    print_all_room_structure()
+    
+    console.log(room_structure_code)
+    console.log(current_room_structure)
+  }
+
+  //방 주변 강조하는 기능(방 선택 확인 용도)
+  //방 구조 리스트의 번호, border텍스트
+  highlight_room_structure = function(room_num, border_text){
+    var x1 = room_structure_code[room_num][0]
+    var y1 = room_structure_code[room_num][1]
+    var x2 = room_structure_code[room_num][2]
+    var y2 = room_structure_code[room_num][3]
+
+    //위 첫줄 : x1 * 30 + y1 ~ y2
+    for(var temp = y1;temp<=y2;temp++)
+    {
+      change_border_num = x1*30 + temp
+      $(".room_one_element").eq(change_border_num).css("border-top",border_text)
+    }
+
+    //마지막 첫줄 : x2 * 30 + y1 ~ y2
+    for(var temp = y1;temp<=y2;temp++)
+    {
+      change_border_num = x2*30 + temp
+      $(".room_one_element").eq(change_border_num).css("border-bottom",border_text)
+    }
+
+    //왼쪽 첫줄 : x1~x2*30 + y1
+    for(var temp = x1;temp<=x2;temp++)
+    {
+      change_border_num = temp*30 + y1
+      $(".room_one_element").eq(change_border_num).css("border-left",border_text)
+    }
+
+    //오른쪽 첫줄 : x1~x2*30 + y2
+    for(var temp = x1;temp<=x2;temp++)
+    {
+      change_border_num = temp*30 + y2
+      $(".room_one_element").eq(change_border_num).css("border-right",border_text)
+    }
+
+  }
+
+  //추가된 요소 클릭할때 툴팁 나타내는 함수
+  on_element_click = function(event){
+    
+    var child = event.target.querySelector('div')
+    if(child != null && child.className=="tooltip_box")
+    {
+      
+      if(child.style.display == "block")
+      {
+        child.style.display = "none"
+        
+      }
+      else
+      {
+        child.style.display = "block"
+      }
+      
+    }
+  }
+
+  //툴팁 생성하는 함수
+  create_room_tooltip = function(id){
+    //툴팁 전체 묶는거
+    var ele = document.createElement("div")
+    ele.className = "tooltip_box"
+    ele.dataset.id = id
+   
+
+    ele.style.opacity = "1"
+    
+    //사이즈 조절하는 위 div 묶는것
+    var size_calc = document.createElement("div")
+    size_calc.className = "size_calc"
+
+    var size_calc_div = document.createElement("div")
+    
+
+    size_calc_div.innerHTML = 2
+   
+    
+
+    var minus_button = document.createElement("button")
+    minus_button.innerHTML = "-"
+    minus_button.className = "btn btn-primary"
+    minus_button.dataset.id = id
+    minus_button.addEventListener("click", element_size_minus)
+    var plus_button = document.createElement("button")
+    plus_button.innerHTML = "+"
+    plus_button.addEventListener("click", element_size_plus)
+    plus_button.className = "btn btn-primary"
+    plus_button.dataset.id = id
+    var delete_button = document.createElement("button")
+    delete_button.addEventListener("click", element_delete)
+    delete_button.className = "delete_button btn btn-danger"
+    delete_button.dataset.id = id
+
+    //상세정보 적는 textarea 넣는 div
+    var specific_box_div = document.createElement("div")
+    specific_box_div.className = "specific_info"
+
+    var specific_textbox = document.createElement("textarea")
+    specific_textbox.className = "form-control"
+
+    //연결
+    size_calc.appendChild(size_calc_div)
+    size_calc.appendChild(minus_button)
+    size_calc.appendChild(plus_button)
+    size_calc.appendChild(delete_button)
+
+    specific_box_div.appendChild(specific_textbox)
+
+    ele.appendChild(size_calc)
+    ele.appendChild(specific_box_div)
+
+    return ele
+  }
+
+  //요소 크기 작게하는 함수
+  element_size_minus = function(event){
+    if(event.target.dataset.id != null)
+    {
+      var cur_element = document.getElementById(event.target.dataset.id)
+
+      if(cur_element.dataset.width > 1)
+      {
+        cur_element.dataset.width = parseInt(cur_element.dataset.width) -1
+        cur_element.dataset.height = parseInt(cur_element.dataset.height) -1
+
+
+        cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
+        cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
+
+        cur_element.children[0].children[0].children[0].innerHTML = cur_element.dataset.width
+        
+      }
+      
+    }
+  }
+
+  //요소 크기 크게하는 함수
+  element_size_plus = function(event){
+    if(event.target.dataset.id != null)
+    {
+      var cur_element = document.getElementById(event.target.dataset.id)
+      var cur_element_location = $(cur_element.parentElement).index()-1
+
+      if(((cur_element_location-30) + (parseInt(cur_element.dataset.width)+1)*30) <=900
+      && ((cur_element_location%30)+(parseInt(cur_element.dataset.width)+1)<=30))
+      {
+        cur_element.dataset.width = parseInt(cur_element.dataset.width) +1
+        cur_element.dataset.height = parseInt(cur_element.dataset.height) +1
+
+
+        cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
+        cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
+
+        cur_element.children[0].children[0].children[0].innerHTML = cur_element.dataset.width
+      }
+    }
+  }
+
+  //요소 삭제하는 함수
+  element_delete = function(event){
+    if(event.target.dataset.id != null)
+    {
+      var cur_element = document.getElementById(event.target.dataset.id)
+      cur_element.remove()
+    }
+
+}
+
+ 
+  //방 요소 클릭시 선택되도록
+  $(".room_element").click(function(e){
+    
+    if(current_room_element=="none")
+    {
+      $('.room_one_element').css("pointer-events", "auto")
+      current_room_element = $(this).attr("class").substr(13)
+    }
+    else
+    {
+      $('.room_one_element').css("pointer-events", "none")
+      current_room_element = "none"
+    }
+    console.log(current_room_element)
+
+ });
+
+
+
+ 
+
+  
+  
+  
+</script>
 </body>
-
-
 </html>

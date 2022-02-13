@@ -68,11 +68,12 @@ def top(request):
     res.set_cookie('token', token) #만든 토큰을 쿠키에 추가
     return res
 
-def draw(request):
-    return render(request, 'main/draw_room.html')
 
-def bootstrap(request):
-    return render(request, 'main/bootstrap_test.html')
+def draw_room(request):
+    token = request.COOKIES.get('token')
+    if token != 'None' and token != None:  # 기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
+        id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
+        access_token = userChecker.checkToken(id)
+        nickname = userChecker.checkNickname(id)
 
-def bootstrap2(request):
-    return render(request, 'main/bootstrap_test2.html')
+        return render(request, 'main/draw_room.html', {'nickname':nickname})
