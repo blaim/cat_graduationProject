@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import NoSuchElementException
-
+from django.shortcuts import render
 
 import pymongo
 from pymongo import MongoClient
@@ -144,7 +144,6 @@ def get_room_information(url):
             '옵션 수': (number_of_options,options),
             '보안시설 수': (number_of_security_system,security_system)
         }
-
         # 입력
         room = db.OneRoom
         room.insert_one(doc)
@@ -162,9 +161,11 @@ def get_room_information(url):
             중개 의로인의 위치 표기 동의를 받지 않은 매물은 정확한 위치가 없으므로, 주소 부분에 대략적인 주소만 적고 
             도로명 주소 란에는 ???를 저장한다.
         '''
+        def index(request):
+            info = {'addrees': room_location, 'monthly_pay': monthly_pay}
+            return render(request, 'main/main.html', info)
         return informations
 
-        #db.ra.insert_one(doc)
     except TimeoutException:
         print("Web Connection Failed(다방, TIMEOUT during single room crawling)")
 
