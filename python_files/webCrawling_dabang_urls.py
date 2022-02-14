@@ -5,6 +5,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import webCrawling_dabang_particial as WB
 
+import json
+
 import pymongo
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
@@ -61,10 +63,6 @@ try:
     for one_room in range(1, (number_of_rooms - 24 * (number_of_rooms//24))+1):
         room_urls.append(driver.find_element(By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(' + str(one_room) + ') > div > a').get_attribute('href'))
 
-    #print(room_urls)
-    #print(len(room_urls))
-    #print(name_of_agency)
-    #print(number_of_rooms)
 
     #제대로 크롤링해서 DB에 저장할때마다 터미널에 url 출력
     for i in room_urls:
@@ -72,11 +70,8 @@ try:
         print(i)
 
 
-
-
 except TimeoutException:
     print("Web Connection Failed(다방, TIMEOUT during url crawling)")
-
 
 '''방 url selector'''
 #content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a

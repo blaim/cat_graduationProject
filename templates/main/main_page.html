@@ -104,43 +104,46 @@ var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         level: 5 // 지도의 확대 레벨
     };
 
+
 // 지도 생성
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
 // 주소-좌표 변환 객체 생성
 var geocoder = new kakao.maps.services.Geocoder();
 
-// 마커를 담을 배열
-var markers = [];
 
-// 주소로 좌표 검색
-geocoder.addressSearch('충청북도 청주시 흥덕구 복대동 1580', function(result, status) {
+{% for i in info %}
+     <p>주소 : {{i.address}}<p>
+     <p>월세 : {{i.monthly_pay}}<p>
+     // 주소로 좌표 검색
+     geocoder.addressSearch('{{i.address}}', function(result, status) {
 
-    // 정상적으로 검색되면
-     if (status === kakao.maps.services.Status.OK) {
+        // 정상적으로 검색되면
+        if (status === kakao.maps.services.Status.OK) {
 
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-		var message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
-		message += result[0].x + ')';
+            var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+		    var message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
+		    message += result[0].x + ')';
 
-		var resultDiv = document.getElementById('clickLatlng');
-		//resultDiv.innerHTML = message;  // 이 부분은 좌표 확인용 코드로, 주석 처리를 해제하면 페이지 가장 아래에 좌표가 출력됨.
+		    var resultDiv = document.getElementById('clickLatlng');
+		    //resultDiv.innerHTML = message;  // 이 부분은 좌표 확인용 코드로, 주석 처리를 해제하면 페이지 가장 아래에 좌표가 출력됨.
 
-        // 결과값 위치를 마커로 표시
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords
-        });
+            // 결과값 위치를 마커로 표시
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
 
-        // 인포윈도우로 장소에 대한 설명을 표시
-        var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px;text-align:center;padding:6px 0;">장소</div>'
-        });
-        infowindow.open(map, marker);
+            // 인포윈도우로 장소에 대한 설명을 표시
+            var infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">{{i.monthly_pay}}</div>'
+            });
+            infowindow.open(map, marker);
 
-        // 지도의 중심 위치로 이동
-        map.setCenter(coords);
-    }
+            // 지도의 중심 위치로 이동
+            map.setCenter(coords);
+        }
+{% endfor %}
 });
 </script>
 <script>
