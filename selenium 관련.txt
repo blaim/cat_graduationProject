@@ -1,0 +1,38 @@
+이 문서는 selenium의 driver.execute_script(script)를 설명한다.
+
+1. driver.execute_script(script)
+이것은 자바스크립트 내용을 현재 크롤링 중인 페이지에서 실행하는 것이다.
+
+2. 예제
+scripts = "list = document.querySelectorAll('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__SmallWrap-t81k0-5.bBMySi > div');images = [];list.forEach(function(item){images.push(window.getComputedStyle(item, '::after').getPropertyValue('background-image'))});return images"
+
+위와 같이, 문자열 형태로 된 자바스크립트를 준비해야 한다.
+
+small_images_urls = driver.execute_script(scripts);
+
+이후, 위와 같이 스크립트를 실행시킨 후 결과를 변수로 받을 수 있다.
+
+3. 예제 스크립트 설명
+
+스크립트 부분은 아래와 같다.
+"list = document.querySelectorAll('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__SmallWrap-t81k0-5.bBMySi > div');images = [];list.forEach(function(item){images.push(window.getComputedStyle(item, '::after').getPropertyValue('background-image'))});return images"
+
+이제 이걸 줄 나눔을 적용해서 다시 적겠다.
+
+"""
+list = document.querySelectorAll('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__SmallWrap-t81k0-5.bBMySi > div');
+images = [];
+list.forEach(function(item){
+        images.push(window.getComputedStyle(item, '::after').getPropertyValue('background-image'))
+    });
+return images
+"""
+
+3.1. document.querySelector(A) / document.querySelectorAll(A)
+이 구문은 기존 selenium에서의 driver.find_element(By.CSS_SELECTOR,A)나 driver.find_elements(By.CSS_SELECTOR,A)와 같다.
+
+3.2. window.getComputedStyle(B, C)
+이 구문은 B에 대해, C라는 의사 속성에 대해 갖는 모든 스타일 속성을 구하는 것이다. 의사 속성은 ::before, ::after 등이 있다.
+
+3.3. D.getPropertyValue(E)
+이 구문은 D에 있는 모든 속성 중에, E라는 속성의 값을 반환한다.
