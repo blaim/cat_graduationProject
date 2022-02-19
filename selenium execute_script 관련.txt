@@ -1,0 +1,36 @@
+1. driver.execute_script(scriptA)
+이 구문은 현재 selenium으로 접속한 페이지에서 scriptA라는 javascript를 실행하는 것이다.
+여기서, scriptA는 하나의 js파일 형태로 작성하면 된다.
+
+2. 스크립트 예시
+위의 scriptA의 자리에 들어가는 스크립트의 예시이다.
+"return window.getComputedStyle(document.querySelector('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__BigWrap-t81k0-3.fxstzP > div'),'::after').getPropertyValue('background-image')"
+위의 경우는 줄이자면 "return B" 형태로 나타낼 수 있다.
+a = driver.execute_script(scriptA)  와 같은 예시에서는 return 되는 값인 B의 결과를 a에 넣게 된다.
+
+그렇다면 B의 내용을 정리하겠다.
+
+2.1. document.querySelector(selector)
+이 구문은 html 파일에서, 쿼리셀렉터로 해당하는 요소에 접근하는 것이다.
+즉, DOM 방식으로 접근하는 것으로, selenium에서 사용되는 By.CSS_SELECTOR를 이용한 find_element와 같다.
+만약 querySelector 대신에 querySelectorAll을 쓴다면 해당하는 요소들을 리스트로 받는다. 이는 find_elements와 같다.
+
+2.2. window.getComputedStyle(C, D)
+이 구문은 C에 해당하는 요소에서, D에 해당하는 가상요소에 접근하여 갖고 있는 속성을 얻는 것이다. 가상요소는 ::before, ::after 등의 이중콜론을 이용한 경우가 속한다.
+
+2.3. E.getPropertyValue(F)
+이 구문은 E에 들어있는 속성 목록에서 F라는 속성이 갖는 값을 얻는 것이다.
+
+3. 복잡한 스크립트 예시
+스크립트가 항상 하나의 문장만으로 이루어지는 것은 아니다. 이번에는 그 예시를 적어보겠다.
+"""
+list = document.querySelectorAll('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__SmallWrap-t81k0-5.bBMySi > div');
+images = [];
+list.forEach(function(item)
+    {
+        images.push(window.getComputedStyle(item, '::after').getPropertyValue('background-image'))
+    });
+return images
+"""
+
+이런 식으로, 여러 줄로 작성되는 코드일 수도 있다.
