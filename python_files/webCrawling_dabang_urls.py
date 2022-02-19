@@ -51,7 +51,8 @@ try:
         for single_div in range(1, 25):
             room_urls.append(driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child('+ str(single_div) +') > div > a').get_attribute('href'))
         '''다음 방 목록 리스트로 이동'''
-        driver.find_element(By.CSS_SELECTOR, '#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > div.styled__PaginWrap-sc-1u1e15y-0.eOczmr > ul > li:nth-last-child(1) > button').click()
+
+
         WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
         WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
         WebDriverWait(driver, 20).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
