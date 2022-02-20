@@ -25,7 +25,9 @@ my_options = webdriver.ChromeOptions()
 '''크롬 창 안뜨도록 설정'''
 my_options.add_argument("headless")
 
-
+test_url = ['https://www.dabangapp.com/agent/61c2c99c43a25a09c06e5ee7','http://www.dabangapp.com/agent/584e63f471813e44e1467e02','http://www.dabangapp.com/agent/602a18a1b394646bd96669c0','http://www.dabangapp.com/agent/5a20e2dff4fc6a557b70dafb','http://www.dabangapp.com/agent/61b2d27b6b2a4b50a0eeeb93','http://www.dabangapp.com/agent/61ca6100f6773a39c4e7bb52','http://www.dabangapp.com/agent/5ad698e171ad9f3c6e382211','http://www.dabangapp.com/agent/61920339cc439926f5d31ef4']
+for l in test_url:
+    print(l)
 
     '''이 파일과 동일 위치에 있다면 path에 파일명만 입력해도 됨'''
 
