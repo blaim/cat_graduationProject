@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from bson.objectid import ObjectId
+from django import forms
 from django.http import JsonResponse
 import requests
 import pprint
@@ -71,9 +72,45 @@ def top(request):
 
 def draw_room(request):
     token = request.COOKIES.get('token')
-    if token != 'None' and token != None:  # 기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
-        id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
-        access_token = userChecker.checkToken(id)
-        nickname = userChecker.checkNickname(id)
+    #입력이 들어온 경우
+    if request.method == "POST":
+        if request.POST.get('room_structure_number'):
+            #draw_room.html의 submit_room_data함수 참고
+            #undefined 들어오면 무시하고 저장하기
+            room_structure_number = int(request.POST.get('room_structure_number'))
+            room_element_number = int(request.POST.get('room_element_number'))
 
-        return render(request, 'main/draw_room.html', {'nickname':nickname})
+            #방 구조의 수 출력
+            print('방 구조 수')
+            print(room_structure_number)
+            #방 요소의 수 출력
+            print('방 요소 수')
+            print(room_element_number)
+            #방구조 정보 출력
+            print('방 구조들')
+            for i in range(0, room_structure_number):
+                print(request.POST.get('room_structure_'+str(i)))
+            #방요소 정보 출력
+            print('방 요소들')
+            for i in range(0, room_element_number):
+                print(request.POST.get('room_element_data'+str(i)))
+
+            #방 위치 출력
+            print('방 위치')
+            print(request.POST.get('room_location'))
+
+            #방 상세 텍스트 출력
+            print('방 상세 텍스트')
+            print(request.POST.get('room_specific_information'))
+
+        return render(request, 'main/draw_room.html')
+    else:
+        if token != 'None' and token != None:  # 기존에 접속한 기록이 있을 경우, 그 기록으로 이전의 토큰을 얻는다.
+            id = ObjectId(jwt.decode(token, SECRET_KEY, ALGORITHM)['id'])
+            access_token = userChecker.checkToken(id)
+            nickname = userChecker.checkNickname(id)
+
+
+            return render(request, 'main/draw_room.html', {'nickname':nickname})
+
+        return render(request, 'main/draw_room.html')
