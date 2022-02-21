@@ -97,13 +97,21 @@
 <div id="clickLatlng"></div>
     <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674&libraries=services&autoload=true"></script>
+    <script type="text/javascript" src="{%static 'json/data.json'%}"
+    function jsonfunc( jsonText ) {
+	let json = JSON.parse(jsonText); // String -> json으로 변환
+		for(i=0; i<json.length; i++){
+		txt += json[i].월세 + " " + json[i].주소 + " " +"<br>";
+	}
+	document.getElementById('demo').innerHTML = txt;
+}
+    </script>
 <script>
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(36.628064331494166, 127.45600280223212), // 지도의 중심좌표
-        level: 5 // 지도의 확대 레벨
+        level: 3 // 지도의 확대 레벨
     };
-
 
 // 지도 생성
 var map = new kakao.maps.Map(mapContainer, mapOption);
@@ -111,12 +119,8 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 // 주소-좌표 변환 객체 생성
 var geocoder = new kakao.maps.services.Geocoder();
 
-
-{% for i in info %}
-     <p>주소 : {{i.address}}<p>
-     <p>월세 : {{i.monthly_pay}}<p>
      // 주소로 좌표 검색
-     geocoder.addressSearch('{{i.address}}', function(result, status) {
+     geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
 
         // 정상적으로 검색되면
         if (status === kakao.maps.services.Status.OK) {
@@ -136,14 +140,13 @@ var geocoder = new kakao.maps.services.Geocoder();
 
             // 인포윈도우로 장소에 대한 설명을 표시
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:6px 0;">{{i.monthly_pay}}</div>'
+                content: '<div style="width:150px;text-align:center;padding:6px 0;">월세</div>'
             });
             infowindow.open(map, marker);
 
             // 지도의 중심 위치로 이동
             map.setCenter(coords);
         }
-{% endfor %}
 });
 </script>
 <script>
