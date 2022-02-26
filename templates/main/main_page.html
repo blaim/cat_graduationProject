@@ -97,15 +97,7 @@
 <div id="clickLatlng"></div>
     <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674&libraries=services&autoload=true"></script>
-    <script type="text/javascript" src="{%static 'json/data.json'%}"
-    function jsonfunc( jsonText ) {
-	let json = JSON.parse(jsonText); // String -> json으로 변환
-		for(i=0; i<json.length; i++){
-		txt += json[i].월세 + " " + json[i].주소 + " " +"<br>";
-	}
-	document.getElementById('demo').innerHTML = txt;
-}
-    </script>
+    <script type="text/javascript" src="{%static 'json/data.json'%}"></script>
 <script>
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {

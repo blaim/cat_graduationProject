@@ -84,6 +84,13 @@
         border:1px solid #ddd
       }
 
+      #room_location{
+        margin-left:10px;
+        margin-top:10px;
+        margin-right:10px;
+        width:40vw;
+      }
+
       #room_text_area{
         margin-left:10px;
         margin-top:10px;
@@ -127,7 +134,8 @@
       .tooltip_box{
                 width:10vw;
                 height:10vw;
-                position:relative;
+                /*position:relative;*/
+                position:absolute;
                 display:none;
                 right:3vm;
                 border-radius:0.5rem;
@@ -169,6 +177,18 @@
             .specific_info textarea{
               width:100%;
               height:100%;
+            }
+
+            .common_draggable_box{
+              width:100%;
+              height:20%;
+              background-color:red;
+              cursor:move;
+            }
+
+            /*모든 정보 저장하는 폼 관련 css*/
+            .not_visible{
+              display:none;
             }
 
     
@@ -252,15 +272,24 @@
             
         </div>
         <div role="tabpanel" class="tab-pane fade" id="text_room">
-          <textarea id="room_text_area" class="form-control" cols="30" rows="10"></textarea>
+          <textarea id="room_location" placeholder="방의 주소를 입력하세요" class="form-control" cols="30" rows="1"></textarea>
+          <textarea id="room_text_area" placeholder="방의 상세 설명을 입력하세요" class="form-control" cols="30" rows="10"></textarea>
         </div>
       </div>
-      <button type="button" class="btn btn-success btn-lg submit_button">저장</button>
+      <button type="button" class="btn btn-success btn-lg submit_button" onclick="submit_room_data();">저장</button>
+      <form id="draw_data_submit" class="not_visible" method="POST">
+        {% csrf_token %}
+      </form>
+      
+
+      
     </div>
   </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="{%static 'js/bootstrap.js' %}"></script>
 <script>
+
+
   //방구조 개수 함수
   var structure_number = 1
   var current_room_structure = -1
@@ -347,6 +376,7 @@
       ele.id = "room_element_" + room_element_num
       ele.dataset.width = 2
       ele.dataset.height = 2
+      ele.dataset.location = number
       
       
       ele.addEventListener("mousedown", on_element_mousedown)
@@ -363,21 +393,10 @@
 
       ele.appendChild(create_room_tooltip(ele.id))
 
-      //방 요소 위치따라 툴팁 위치 조정
-      if(number < 450)
-      {
-        ele.children[0].style.top = "13vw"
-        ele.children[0].style.right = "3vw"
-      }
-      else
-      {
-        ele.children[0].style.bottom = "13vw"
-        ele.children[0].style.right = "3vw"
-      }
-
-      
 
       $(".room_one_element").eq(number).append(ele)
+
+      dragElement(document.getElementById(ele.id+"_tooltip"));
 
       $(ele).animate({
         width:'2.6%', height:'3.0%'
@@ -589,6 +608,7 @@
   //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
   $(document).on('click', '.room_structure', function(e){
     e.preventDefault()
+    
 
     
     if(current_room_structure == $(this).html()-1)
@@ -642,8 +662,9 @@
 
     var cur_width = moving_ele.dataset.width
     var cur_height = moving_ele.dataset.height
+    var cur_location = moving_ele.dataset.location
 
-    var textarea_value = moving_ele.children[0].children[1].children[0].value
+    var textarea_value = moving_ele.children[0].children[2].children[0].value
 
     //들어갈 수 있는 크기일때만 옮긴다
     if(((cur_element_location-30) + (parseInt(cur_width))*30) <=900
@@ -657,6 +678,7 @@
         ele.id = "room_element_" + current_moving_element_id
         ele.dataset.width = cur_width
         ele.dataset.height = cur_height
+        ele.dataset.location = cur_location
         ele.style.width = (cur_width * element_basic_width) + "%"
         ele.style.height = (cur_height * element_basic_height) + "%"
 
@@ -665,19 +687,9 @@
 
         ele.appendChild(create_room_tooltip(ele.id))
 
-        if($(event.target).index() <450)
-          {
-            ele.children[0].style.top = "13vw"
-            ele.children[0].style.right = "3vw"
-          }
-          else
-          {
-            ele.children[0].style.bottom = "13vw"
-            ele.children[0].style.right = "3vw"
-          }
 
-        ele.children[0].children[0].children[0].innerHTML = cur_width
-        ele.children[0].children[1].children[0].value = textarea_value
+        ele.children[0].children[1].children[0].innerHTML = cur_width
+        ele.children[0].children[2].children[0].value = textarea_value
     
 
         $(event.target).append(ele)
@@ -724,6 +736,8 @@
     
     //배열에 있는 나머지 다시 색칠
     print_all_room_structure()
+
+    
     
     console.log(room_structure_code)
     console.log(current_room_structure)
@@ -792,6 +806,7 @@
     //툴팁 전체 묶는거
     var ele = document.createElement("div")
     ele.className = "tooltip_box"
+    ele.id = id+"_tooltip"
     ele.dataset.id = id
    
 
@@ -806,6 +821,9 @@
 
     size_calc_div.innerHTML = 2
    
+    var draggable_box = document.createElement("div")
+    draggable_box.id = id + "_tooltip_header"
+    draggable_box.className = "common_draggable_box"
     
 
     var minus_button = document.createElement("button")
@@ -838,6 +856,7 @@
 
     specific_box_div.appendChild(specific_textbox)
 
+    ele.appendChild(draggable_box)
     ele.appendChild(size_calc)
     ele.appendChild(specific_box_div)
 
@@ -859,7 +878,7 @@
         cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
         cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
 
-        cur_element.children[0].children[0].children[0].innerHTML = cur_element.dataset.width
+        cur_element.children[0].children[1].children[0].innerHTML = cur_element.dataset.width
         
       }
       
@@ -883,7 +902,7 @@
         cur_element.style.width = (element_basic_width *cur_element.dataset.width) + "%"
         cur_element.style.height = (element_basic_height *cur_element.dataset.height) + "%"
 
-        cur_element.children[0].children[0].children[0].innerHTML = cur_element.dataset.width
+        cur_element.children[0].children[1].children[0].innerHTML = cur_element.dataset.width
       }
     }
   }
@@ -893,7 +912,19 @@
     if(event.target.dataset.id != null)
     {
       var cur_element = document.getElementById(event.target.dataset.id)
+      var cur_element_id_num = parseInt(cur_element.id.substr(13))
+
+      for(var i=cur_element_id_num+1;i<room_element_num;i++)
+      {
+        var temp_ele = document.getElementById("room_element_"+i)
+        temp_ele.id = "room_element_"+(i-1)
+      }
+
+      console.log(cur_element_id_num)
+      
+
       cur_element.remove()
+      room_element_num = room_element_num-1
     }
 
 }
@@ -914,11 +945,130 @@
     }
     console.log(current_room_element)
 
+
  });
 
+//툴팁박스 드래그해서 움직이게 하는 함수
+ function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "_header")) {
+    document.getElementById(elmnt.id + "_header").onmousedown = dragMouseDown;
+  } else {
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+//데이터 POST형식으로 전송하는 함수
+//방 구조 name은 room_structure_(num)
+//방 요소 name은 room_element_(num)
+//방 주소 name은 room_location
+//방 상세정보 name은 room_specific_information
+//room_element_1
+//room_element_num -1 이 현재 추가된 요소의 개수
+function submit_room_data(){
+  var temp_text = ""
+  console.log("haha")
+  var form = document.getElementById("draw_data_submit")
+  
+  //방 구조 개수(실제 개수 저장)
+  var room_structure_number = document.createElement("textarea")
+  room_structure_number.setAttribute("name", "room_structure_number")
+  room_structure_number.innerHTML = room_structure_code.length
+  form.appendChild(room_structure_number)
+
+  //방 요소 개수(실제 개수 저장)
+  var room_element_number = document.createElement("textarea")
+  room_element_number.setAttribute("name", "room_element_number")
+  room_element_number.innerHTML = room_element_num-1
+  form.appendChild(room_element_number)
+
+  //방 구조 저장
+  for(var i=0; i< room_structure_code.length;i++){
+    for(var j=0;j<4;j++){
+      temp_text = temp_text + " " + room_structure_code[i][j]
+    }
+      var temp_text_save = document.createElement("textarea")
+      temp_text_save.setAttribute("name", "room_structure_"+i)
+      temp_text_save.innerHTML = temp_text
+      form.appendChild(temp_text_save)
+      temp_text = ""
+  }
+
+  //방 요소 저장
+  //요소이름, 크기, 위치, 세부정보 순서로 저장
+  for(var i=1;i<room_element_num;i++)
+  {
+    var cur_ele = document.getElementById("room_element_"+i)
+    var temp_ele_save = document.createElement("textarea")
+    temp_ele_save.setAttribute("name", "room_element_data"+(parseInt(i)-1))
+
+    temp_text = temp_text + $(cur_ele).attr("class").substr(13) +" "
+    temp_text = temp_text + cur_ele.dataset.width + " "
+    temp_text = temp_text + cur_ele.dataset.location + " "
+    temp_text = temp_text + cur_ele.children[0].children[2].children[0].value
+    temp_ele_save.innerHTML = temp_text
+
+    form.appendChild(temp_ele_save)
+    temp_text = ""
+  }
+
+  //방 주소 저장
+  if($(document.getElementById("room_location")).val()!="")
+  {
+    var room_location = document.createElement("textarea")
+    temp_text = $(document.getElementById("room_location")).val()
+
+    room_location.setAttribute("name", "room_location")
+
+    room_location.innerHTML = temp_text
+    form.appendChild(room_location)
+    temp_text = ""
+  }
 
 
- 
+  //방 상세 텍스트 정보 저장
+  if($(document.getElementById("room_text_area")).val()!="")
+  {
+    var room_specific_information = document.createElement("textarea")
+    temp_text = $(document.getElementById("room_text_area")).val()
+
+    room_specific_information.setAttribute("name", "room_specific_information")
+
+    room_specific_information.innerHTML = temp_text
+    form.appendChild(room_specific_information)
+    temp_text = ""
+  }
+  
+
+  form.submit()
+}
+
+
 
   
   
