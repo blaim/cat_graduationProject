@@ -20,8 +20,7 @@ def get_room_information(url):
     driver.get(url=test_url)
 
     try:
-        WebDriverWait(driver, 100).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,
-                                                                                          '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(6) > div > div > p.title')))
+        WebDriverWait(driver, 100).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(6) > div > div > p.title')))
 
         def check_if_element_exists(selector):
             try:
@@ -44,47 +43,31 @@ def get_room_information(url):
             image_url[i] = image_url[i][5:-2]
 
         # 공인중개사 정보를 구한다.
-        agent = driver.find_element(By.CSS_SELECTOR,
-                                    '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__StickySideContainer-sc-1a06c6n-0.TVcfR > div > div > div.styled__LessorWrap-cvrpi1-12.geyQBW > div > p').get_attribute(
-            'innerText')
+        agent = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__StickySideContainer-sc-1a06c6n-0.TVcfR > div > div > div.styled__LessorWrap-cvrpi1-13.jVGbJb > div > p').get_attribute('innerText')
 
         # 들어있는 가격 정보의 수를 구한다.
-        price_list = driver.find_elements(By.CSS_SELECTOR,
-                                          '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li')
+        price_list = driver.find_elements(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li')
         price_num = len(price_list)
         # 가격 정보를 임시로 넣을 딕셔너리를 만든다.
         price_list = {}
         # 딕셔너리에 정보들을 집어넣는다.
         for i in range(price_num):
             b = ""
-            a = driver.find_element(By.CSS_SELECTOR,
-                                    '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
-                                        (i + 1)) + ') > div.styled__Name-rtvnk4-8.eFgXRF').get_attribute('innerText')
+            a = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str((i + 1)) + ') > div.styled__Name-rtvnk4-8.eFgXRF').get_attribute('innerText')
             a = a.replace('\n\n', ' ')
             if a == '관리비':
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
-                                            (
-                                                        i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p:nth-child(1)').get_attribute(
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
+                                            (i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p:nth-child(1)').get_attribute(
                     'innerText')
             elif a == '한달 예상 주거비용':
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
-                                            (
-                                                        i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p.costContent').get_attribute(
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str((i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p.costContent').get_attribute(
                     'innerText')
             elif a == '주차':
                 continue
             elif a == '단기임대':
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
-                                            (i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj').get_attribute(
-                    'innerText')
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str((i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj').get_attribute('innerText')
             else:
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str(
-                                            (i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p').get_attribute(
-                    'innerText')
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str((i + 1)) + ') > div.styled__Content-rtvnk4-9.haTbsj > p').get_attribute('innerText')
             price_list[a] = b
 
         # 월세
@@ -98,27 +81,18 @@ def get_room_information(url):
 
         '''상세 정보 크롤링'''
         # 들어있는 상세 정보의 수를 구한다.
-        detailed_list = driver.find_elements(By.CSS_SELECTOR,
-                                             '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li')
+        detailed_list = driver.find_elements(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li')
         detailed_num = len(detailed_list)
         # 상세 정보를 임시로 넣을 딕셔너리를 만든다.
         detailed_list = {}
         # 딕셔너리에 정보들을 집어넣는다.
         for i in range(detailed_num - 1):
             b = ""
-            a = driver.find_element(By.CSS_SELECTOR,
-                                    '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str(
-                                        (i + 2)) + ') > div.styled__Name-rtvnk4-8.eFgXRF').get_attribute('innerText')
+            a = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str((i + 2)) + ') > div.styled__Name-rtvnk4-8.eFgXRF').get_attribute('innerText')
             if a == '전용/공급면적':
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str(
-                                            (i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj > label').get_attribute(
-                    'innerText')
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str((i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj > label').get_attribute('innerText')
             else:
-                b = driver.find_element(By.CSS_SELECTOR,
-                                        '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str(
-                                            (i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj').get_attribute(
-                    'innerText')
+                b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str((i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj').get_attribute('innerText')
             detailed_list[a] = b
         # 각 정보에 대해, 존재하면 값을 얻는다.
         floor = detailed_list.get('해당층/건물층')
@@ -136,54 +110,38 @@ def get_room_information(url):
         first_registration_date = detailed_list.get('최초등록일')
 
         '''바로는 세부 위치 안나옴, 버튼 없다면 세부주소 없는것'''
-        if (check_if_element_exists(
-                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC > button')):
-            driver.find_element(By.CSS_SELECTOR,
-                                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC > button').click()
-            room_location = driver.find_element(By.CSS_SELECTOR,
-                                                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute(
-                'innerText')
-            driver.find_element(By.CSS_SELECTOR,
-                                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').click()
-            street_name_location = driver.find_element(By.CSS_SELECTOR,
-                                                       '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute(
-                'innerText')
+        if (check_if_element_exists('#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC > button')):
+            driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC > button').click()
+            room_location = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute('innerText')
+            driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').click()
+            street_name_location = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute('innerText')
         else:
-            room_location = driver.find_element(By.CSS_SELECTOR,
-                                                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute(
-                'innerText')
+            room_location = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute('innerText')
             street_name_location = "???"
 
         '''상세설명 크롤링'''
         detailed_description = \
-            driver.find_element(By.CSS_SELECTOR,
-                                '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(6) > div > div').get_attribute(
+            driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(6) > div > div').get_attribute(
                 'innerText')
 
         '''옵션 크롤링'''
-        number_of_option_list = driver.find_elements(By.CSS_SELECTOR,
-                                                     '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(3) > div > div > div')
+        number_of_option_list = driver.find_elements(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(3) > div > div > div')
         number_of_options = len(number_of_option_list)
         options = []
         for i in range(1, number_of_options + 1):
-            options.append(driver.find_element(By.CSS_SELECTOR,
-                                               '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(3) > div > div > div:nth-child(' + str(
-                                                   i) + ') > p').get_attribute('innerText'))
+            options.append(driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(3) > div > div > div:nth-child(' + str(i) + ') > p').get_attribute('innerText'))
         '''보안/ 안전시설 크롤링'''
-        number_of_security_system_list = driver.find_elements(By.CSS_SELECTOR,
-                                                              '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(4) > div > div > div')
+        number_of_security_system_list = driver.find_elements(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(4) > div > div > div')
         number_of_security_system = len(number_of_security_system_list)
         security_system = []
         for i in range(1, number_of_security_system + 1):
-            security_system.append(driver.find_element(By.CSS_SELECTOR,
-                                                       '#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(4) > div > div > div:nth-child(' + str(
-                                                           i) + ') > p').get_attribute('innerText'))
+            security_system.append(driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(4) > div > div > div:nth-child(' + str(i) + ') > p').get_attribute('innerText'))
 
         # 정보 획득이 끝난 후에는 창을 닫는다.
         driver.quit()
 
         '''월세 정보 텍스트 수정'''
-        monthly_pay = monthly_pay[3:]
+        #monthly_pay = monthly_pay[3:]
 
         '''평수 텍스트 수정'''
         area = area[:-2]
@@ -277,5 +235,5 @@ def get_room_information(url):
     except TimeoutException:
         print("Web Connection Failed(다방, TIMEOUT during single room crawling)")
 
-# a = get_room_information('http://www.dabangapp.com/room/61fc8496872b9405c3b2b3d4')
-# print(a)
+#a = get_room_information('http://www.dabangapp.com/room/61fc8496872b9405c3b2b3d4')
+#print(a)

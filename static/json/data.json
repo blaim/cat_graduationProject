@@ -1,5 +1,15 @@
 ﻿[
    {
+      "URL": "http://www.dabangapp.com/room/61fb6dc9c2de3437c272e3f1",
+      "월세": "100/20",
+      "주소": "충청북도 청주시 흥덕구 복대동 883-3"
+   },
+   {
+      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
+      "월세": "200/25",
+      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
+   },
+   {
       "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
       "월세": "200/32",
       "주소": "충청북도 청주시 흥덕구 복대동 856-15"
@@ -10,64 +20,9 @@
       "주소": "충청북도 청주시 흥덕구 복대동 177-4"
    },
    {
-      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6203470b2b91ce1e0206f6b7",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 905-12"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6207460087c08c421410027e",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-8"
-   },
-   {
       "URL": "http://www.dabangapp.com/room/620745f3d5df066ab285bbd2",
       "월세": "100/25",
       "주소": "충청북도 청주시 흥덕구 복대동 1610"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620b0065a703357d2c4d6ffe",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 1722"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f4c96468c513c9bb5dc2",
-      "월세": "200/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1604"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61fb6dc9c2de3437c272e3f1",
-      "월세": "100/20",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61fb3665616ed749d768fffd",
-      "월세": "200/29",
-      "주소": "충청북도 청주시 흥덕구 복대동 882-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f161ee6fa4767cdca3d1",
-      "월세": "100/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1645"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f281e3ab3263a62fd8ad",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 1602"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f3ab3bae397ee297185f",
-      "월세": "100/28",
-      "주소": "충청북도 청주시 서원구 사창동 217-10"
    },
    {
       "URL": "http://www.dabangapp.com/room/620b02510fda4a7c613a97f6",
@@ -80,233 +35,18 @@
       "주소": "충청북도 청주시 흥덕구 복대동 882-1"
    },
    {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620345cc8e43b726db0d79b1",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 177-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6203470b2b91ce1e0206f6b7",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 905-12"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620345cc8e43b726db0d79b1",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 177-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620345cc8e43b726db0d79b1",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 177-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620345cc8e43b726db0d79b1",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 177-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6203470b2b91ce1e0206f6b7",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 905-12"
-   },
-   {
       "URL": "http://www.dabangapp.com/room/6207460087c08c421410027e",
       "월세": "200/25",
       "주소": "충청북도 청주시 흥덕구 복대동 883-8"
    },
    {
-      "URL": "http://www.dabangapp.com/room/620745f3d5df066ab285bbd2",
-      "월세": "100/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 1610"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620b0065a703357d2c4d6ffe",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 1722"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f4c96468c513c9bb5dc2",
-      "월세": "200/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1604"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61fb6dc9c2de3437c272e3f1",
-      "월세": "100/20",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f4c96468c513c9bb5dc2",
-      "월세": "200/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1604"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6207460087c08c421410027e",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-8"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f3ab3bae397ee297185f",
-      "월세": "100/28",
-      "주소": "충청북도 청주시 서원구 사창동 217-10"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
       "URL": "http://www.dabangapp.com/room/6203470b2b91ce1e0206f6b7",
       "월세": "200/30",
       "주소": "충청북도 청주시 흥덕구 복대동 905-12"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f4c96468c513c9bb5dc2",
-      "월세": "200/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1604"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6207460087c08c421410027e",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-8"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f3ab3bae397ee297185f",
-      "월세": "100/28",
-      "주소": "충청북도 청주시 서원구 사창동 217-10"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61fb6dc9c2de3437c272e3f1",
-      "월세": "100/20",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f281e3ab3263a62fd8ad",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 1602"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61fb3d788ce80541d37b2e34",
-      "월세": "100/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 882-1"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745e637b3f13ff3833506",
-      "월세": "200/32",
-      "주소": "충청북도 청주시 흥덕구 복대동 856-15"
    },
    {
       "URL": "http://www.dabangapp.com/room/61fb3665616ed749d768fffd",
       "월세": "200/29",
       "주소": "충청북도 청주시 흥덕구 복대동 882-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620b02510fda4a7c613a97f6",
-      "월세": "200/27",
-      "주소": "충청북도 청주시 서원구 개신동 245-9"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/62034880f287e0029a19b8ea",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 857-3"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f161ee6fa4767cdca3d1",
-      "월세": "100/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1645"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620745f3d5df066ab285bbd2",
-      "월세": "100/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 1610"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f4c96468c513c9bb5dc2",
-      "월세": "200/23",
-      "주소": "충청북도 청주시 흥덕구 복대동 1604"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620345cc8e43b726db0d79b1",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 177-4"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/620b0065a703357d2c4d6ffe",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 1722"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6203470b2b91ce1e0206f6b7",
-      "월세": "200/30",
-      "주소": "충청북도 청주시 흥덕구 복대동 905-12"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f3ab3bae397ee297185f",
-      "월세": "100/28",
-      "주소": "충청북도 청주시 서원구 사창동 217-10"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/61f0f5aeee9a367edc0a01b4",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 서원구 사창동 217-15"
-   },
-   {
-      "URL": "http://www.dabangapp.com/room/6207460087c08c421410027e",
-      "월세": "200/25",
-      "주소": "충청북도 청주시 흥덕구 복대동 883-8"
    }
 ]
