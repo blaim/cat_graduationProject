@@ -97,14 +97,13 @@
 <div id="clickLatlng"></div>
     <script type="text/javascript" src="https://developers.kakao.com/sdk/js/kakao.js"></script>
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6d1ad052df81bb894aba3f443d1fd674&libraries=services&autoload=true"></script>
-<script>
+    <script type="text/javascript" src="{%static 'json/data.json'%}"></script>
+<script type="text/javascript">
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div
     mapOption = {
         center: new kakao.maps.LatLng(36.628064331494166, 127.45600280223212), // 지도의 중심좌표
         level: 5 // 지도의 확대 레벨
     };
-
-
 // 지도 생성
 var map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -112,39 +111,89 @@ var map = new kakao.maps.Map(mapContainer, mapOption);
 var geocoder = new kakao.maps.services.Geocoder();
 
 
-{% for i in info %}
-     <p>주소 : {{i.address}}<p>
-     <p>월세 : {{i.monthly_pay}}<p>
-     // 주소로 좌표 검색
-     geocoder.addressSearch('{{i.address}}', function(result, status) {
+let xhttp = new XMLHttpRequest();
 
-        // 정상적으로 검색되면
+xhttp.onreadystatechange = function () {
+    if(xhttp.readyState == 4 && xhttp.status == 200){
+        jsonfunc(this.responseText); //this = xhttp
+        }
+    }
+xhttp.open("GET","{%static 'json/data.json' %}", true);
+xhttp.send();
+    // 마커 이미지의 이미지 주소
+    var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+    // 마커 이미지의 이미지 크기
+    var imageSize = new kakao.maps.Size(24, 35);
+    // 마커 이미지를 생성
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+function jsonfunc( jsonText ) {
+    var json = JSON.parse(jsonText); // String -> json으로 변환
+
+
+    for (i = 0; i < json.length; i++){
+	    // 주소로 좌표를 검색합니다
+	    geocoder.addressSearch(json[i].주소, function(result, status) {
+
+        // 정상적으로 검색이 완료됐으면
         if (status === kakao.maps.services.Status.OK) {
-
             var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-		    var message = 'latlng: new kakao.maps.LatLng(' + result[0].y + ', ';
-		    message += result[0].x + ')';
-
-		    var resultDiv = document.getElementById('clickLatlng');
-		    //resultDiv.innerHTML = message;  // 이 부분은 좌표 확인용 코드로, 주석 처리를 해제하면 페이지 가장 아래에 좌표가 출력됨.
-
-            // 결과값 위치를 마커로 표시
+            // 결과값으로 받은 위치를 마커로 표시합니다
             var marker = new kakao.maps.Marker({
                 map: map,
-                position: coords
+                position: coords,
+                image : markerImage,
+                clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
             });
 
-            // 인포윈도우로 장소에 대한 설명을 표시
+                var iwContent = '<div style="padding:5px;">Hello World! <br><a href="http://www.dabangapp.com/room/61fb6dc9c2de3437c272e3f1" style="color:blue" target="_blank">방 보기</a></div>'// 인포윈도우에 표출될 내용
+                iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
+
+            // 인포윈도우로 장소에 대한 설명을 표시합니다
             var infowindow = new kakao.maps.InfoWindow({
-                content: '<div style="width:150px;text-align:center;padding:6px 0;">{{i.monthly_pay}}</div>'
+                content: iwContent ,
+                removable : iwRemoveable
             });
-            infowindow.open(map, marker);
 
-            // 지도의 중심 위치로 이동
-            map.setCenter(coords);
-        }
-{% endfor %}
-});
+            kakao.maps.event.addListener(marker, 'click', function() {
+            // 마커 위에 인포윈도우를 표시합니다
+                infowindow.open(map, marker);
+                });
+            }
+            // 마커에 마우스아웃 이벤트를 등록합니다
+            kakao.maps.event.addListener(marker, 'mouseover', function() {
+                // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                infowindow.close();
+            });
+            marker.setOpacity(0.7);  //마커 불투명도
+            marker.setmap(map);
+        });
+    }
+}
+</script>
+<div id="도움말">
+여기는 도움말 내용입니다.
+</div>
+
+
+<script>
+
+function PopupExplain(param){
+
+var val = document.getElementById(param).outerHTML;
+
+var explain = document.getElementById("explain");
+
+
+
+var w = window.open("","","");
+
+w.document.write(val);
+
+w.document.close();
+
+}
+
 </script>
 <script>
     is_hidden = 0;

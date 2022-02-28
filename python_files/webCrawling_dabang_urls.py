@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import webCrawling_dabang_particial as WB
+from django.shortcuts import render
 
 import json
 import pymongo
@@ -38,7 +39,9 @@ for l in test_url:
     try:
         '''내부 요소 따로 로딩되기 때문에 로딩 될때까지 wait'''
         '''content box 내부도 로딩 시간에 차이가 있음에 주의하자'''
-        WebDriverWait(driver, 100).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+
+        WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+
 
         name_of_agency = driver.find_element(By.CSS_SELECTOR,'#content > div > div > ul > li:nth-child(1) > div').get_attribute('innerText')
         agency_number = driver.find_element(By.CSS_SELECTOR,'#content > div > div > ul > li:nth-child(4) > div').get_attribute('innerText')
@@ -70,12 +73,14 @@ for l in test_url:
             # 다음 페이지가 있다면 버튼을 눌러서 이동한다. 버튼 로딩 시간은 생각보다 긴 편이다.
             else:
                 nextButton.click()
-                WebDriverWait(driver, 100).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+
+                WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
 
         '''제대로 크롤링해서 DB에 저장할때마다 터미널에 url 출력'''
         for i in room_urls:
-            WB.get_room_information(i)
             print(i)
+            WB.get_room_information(i)
+
 
         # 크롤링이 끝난 후에는 창을 닫는다.
         driver.quit()
@@ -87,7 +92,9 @@ for l in test_url:
 
 j = 0
 # json에 넣을 값들만을 찾는다.
-fd = room.find({}, {'_id': 0, 'URL': 1, '월세': 1, '주소': 1})
+
+fd = room.find({}, {'_id': 0, 'URL': 1, '월세':1, '주소': 1})
+
 dict = {}
 dict = list(dict.items())
 print(dict)
@@ -99,6 +106,14 @@ with open('../static/json/data.json', 'w' ,encoding='utf-8-sig')as f:
         j += 1
     json.dump(dict, f, ensure_ascii=False,indent=3)
 f.close()
+
+def showattractions(request):
+    #with와 json 모듈을 이용해 Json파일 불러오기
+    with open('../static/json/data.json', encoding='utf-8-sig') as json_file:
+        attractions = json.load(json_file)
+    attractionJson = json.dumps(dict, ensure_ascii=False)
+    return render(request,'../templates/main/main_html',{'attractionJson':attractionJson})
+
 
 '''방 url selector'''
 #content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a
