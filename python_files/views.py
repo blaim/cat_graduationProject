@@ -79,6 +79,7 @@ def draw_room(request):
             #undefined 들어오면 무시하고 저장하기
             room_structure_number = int(request.POST.get('room_structure_number'))
             room_element_number = int(request.POST.get('room_element_number'))
+            room_window_structure_number = int(request.POST.get('room_window_structure_number'))
 
             #방 구조의 수 출력
             print('방 구조 수')
@@ -86,10 +87,16 @@ def draw_room(request):
             #방 요소의 수 출력
             print('방 요소 수')
             print(room_element_number)
+            #방 창문 요소 수
+            print('방 창문 요소 수')
+            print(room_window_structure_number)
             #방구조 정보 출력
             print('방 구조들')
             for i in range(0, room_structure_number):
                 print(request.POST.get('room_structure_'+str(i)))
+            print('방 창문 요소들')
+            for i in range(0, room_window_structure_number):
+                print(request.POST.get('room_window_structure_'+str(i)))
             #방요소 정보 출력
             print('방 요소들')
             for i in range(0, room_element_number):

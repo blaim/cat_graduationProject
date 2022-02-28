@@ -31,6 +31,19 @@
         float:left;
       }
 
+      #add_room_window{
+        width:100px;
+        height:100px;
+        background-color:rgb(145, 145, 145);
+        color:rgb(224, 224, 224);
+        border:8px dashed grey;
+        font-size:60px;
+        text-align:center;
+        margin:5px;
+        cursor:pointer;
+        float:left;
+      }
+
       #draw_room{
         margin-left:10px;
         margin-top:10px;
@@ -55,6 +68,18 @@
       }
 
       .room_structure{
+        width:100px;
+        height:100px;
+        background-color:black;
+        color:white;
+        cursor:default;
+        font-size:70px;
+        text-align:center;
+        float:left;
+        margin:5px;
+      }
+
+      .room_window_structure{
         width:100px;
         height:100px;
         background-color:black;
@@ -191,6 +216,47 @@
               display:none;
             }
 
+          #door_element{
+            background-color:brown;
+            width:100px;
+            height:100px;
+            float:left;
+            
+          }
+
+          #window_element{
+            background-color:skyblue;
+            width:100px;
+            height:100px;
+            float:left;
+          }
+
+          /*창문 요소 툴팁 css */
+          .window_tooltip_box{
+            position:absolute;
+            display:none;
+            width:20vw;
+            height:20vw;
+            z-index:1;
+          }
+
+          .window_tooltip_box .location_box{
+            width:100%;
+            height:30%;
+            background-color:purple;
+          }
+
+          .window_tooltip_box .thickness_box{
+            width:100%;
+            height:30%;
+            background-color:blue;
+          }
+
+          .window_tooltip_box .border_element_box{
+            width:100%;
+            height:30%;
+            background-color:yellow;
+          }
     
       
       
@@ -219,35 +285,54 @@
         <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
           <div id="room_add_parent" class="panel-body">
             <div id="add_room">+</div>
-            <div class="trash_can" ondragover="allow_room_structure_drop();" ondrop="drop_room_strucutre_to_trash();"></div>
+            <div class="trash_can" ondragover="allow_room_structure_drop();" ondrop="drop_room_structure_to_trash();"></div>
           </div>
         </div>
       </div>
+
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingTwo">
           <h4 class="panel-title text-center">
-            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              가구
+            <a class="collapsed" id="add_window_structure_tab" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseThree">
+              문, 창문
             </a>
           </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-          <div class="panel-body">
-            <div class="room_element desk"></div>
+        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">   
+          <div class="panel-body" id="room_window_add_parent">  
+            <div id="add_room_window">+</div>
+            <div class="trash_can" ondragover="allow_room_structure_drop();" ondrop="drop_room_window_to_trash();"></div>
           </div>
         </div>
       </div>
+
       <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="headingThree">
           <h4 class="panel-title text-center">
-            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              다른거 메뉴
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseTwo">
+              가구
             </a>
           </h4>
         </div>
         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
           <div class="panel-body">
-            
+            <div class="room_element desk"></div>
+          </div>
+        </div>
+      </div>
+
+     
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingFour">
+          <h4 class="panel-title text-center">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+              다른거 메뉴
+            </a>
+          </h4>
+        </div>
+        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">   
+          <div class="panel-body">   
           </div>
         </div>
       </div>
@@ -288,13 +373,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script type="text/javascript" src="{%static 'js/bootstrap.js' %}"></script>
 <script>
-
+  //미리보기 색
+  var preview_color = "red"
+  var wall_color = "black"
+  var window_color = "aqua"
+  var door_color = "brown"
 
   //방구조 개수 함수
   var structure_number = 1
   var current_room_structure = -1
   var current_room_element = "none"
   var drag_started = 0
+  var window_drag_started = 0
 
   //구조 드래그 시작, 끝지점 xy좌표 저장
   var room_sturcture_drag_start_x
@@ -330,7 +420,12 @@
 
   //현재 추가하는 방 구조의 번호
   var current_room_element_id = -1
-  
+
+  //문, 창문, 벽 등 저장 수
+  var room_window_number = 1
+  var current_window_number = -1
+  var room_window_code = []
+  var window_structure_serial = 0;
 
 
   var draw_room_box = document.getElementById("draw_room")
@@ -353,6 +448,9 @@
   $(".room_one_element").mousedown(function(e){
     if(document.getElementById("add_room_structure_tab").ariaExpanded == "true")
       drag_started = 1
+
+    if(document.getElementById("add_window_structure_tab").ariaExpanded == "true")
+      window_drag_started = 1
 
     //강조표시 해제
     if(current_room_structure != -1)
@@ -406,7 +504,7 @@
  });
 
 
-  //마우스 끄는동안 미리보기 생성
+  //방 구조 마우스 끄는동안 미리보기 생성
   $(".room_one_element").mouseenter(function(e){
     e.preventDefault()
 
@@ -453,7 +551,68 @@
       temp_drag_x2 = x2
       temp_drag_y2 = y2
 
-      print_color("red", x1,y1,x2,y2)
+      print_color(preview_color, x1,y1,x2,y2)
+    }
+
+    //창문 요소 늘릴때
+    if(current_window_number != -1 && window_drag_started==1){
+      var number = $(".room_one_element").index(this);
+      var x1
+      var x2
+      var y1
+      var y2
+      var x_increase = 0
+      var temp
+    
+      e.preventDefault()
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(temp_drag_x1 != -1 && temp_drag_y1 != -1)
+      {
+        print_color("green", temp_drag_x1,temp_drag_y1,temp_drag_x2,temp_drag_y2)
+      }
+
+      if(room_structure_drag_start_x <= room_structure_drag_end_x){
+        x1 = room_structure_drag_start_x
+        x2 = room_structure_drag_end_x
+      }else{
+        x1 = room_structure_drag_end_x
+        x2 = room_structure_drag_start_x
+      }
+
+      if(room_structure_drag_start_y <= room_structure_drag_end_y){
+        y1 = room_structure_drag_start_y
+        y2 = room_structure_drag_end_y
+      }else{
+        y1 = room_structure_drag_end_y
+        y2 = room_structure_drag_start_y
+      }
+
+      temp_drag_x1 = x1
+      temp_drag_y1 = y1
+      temp_drag_x2 = x2
+      temp_drag_y2 = y2
+      
+
+      //비교해서 긴쪽으로 늘린다
+      if(Math.abs(room_structure_drag_start_x - room_structure_drag_end_x) >= Math.abs(room_structure_drag_start_y - room_structure_drag_end_y))
+      { 
+        x_increase = 1
+      }
+      
+      //배열에 있는 나머지 다시 색칠
+      print_all_room_structure()
+
+      if(x_increase == 1)
+      {
+        print_linear_area_color(preview_color, x1, x2, room_structure_drag_start_y, "x")
+      }
+      else
+      {
+        print_linear_area_color(preview_color, y1, y2, room_structure_drag_start_x, "y")
+      }
+      
     }
     
   });
@@ -511,10 +670,80 @@
 
       //배열에 있는 나머지 다시 색칠
       print_all_room_structure()
+      print_all_window_structure()
       
 
       highlight_room_structure(current_room_structure, "5px solid black")
       console.log(current_room_structure)
+      temp_drag_x1 = -1
+      temp_drag_y1 = -1
+      temp_drag_x2 = -1
+      temp_drag_y2 = -1
+    }
+
+
+    //창문 요소 놓았을때
+    if(window_drag_started == 1 && current_window_number != -1)
+    {
+      window_drag_started = 0
+      var start
+      var end
+      var standard
+      var x_increase
+      var number = $(".room_one_element").index(this);
+
+      $('.room_one_element').css('border', 'none')
+
+      room_structure_drag_end_x = parseInt(number/30)
+      room_structure_drag_end_y = number % 30
+
+      if(Math.abs(room_structure_drag_start_x - room_structure_drag_end_x) >= Math.abs(room_structure_drag_start_y - room_structure_drag_end_y))
+      { 
+        x_increase = 1
+      }
+
+      if(x_increase == 1)
+      {
+        if(room_structure_drag_start_x<=room_structure_drag_end_x)
+        {
+          start = room_structure_drag_start_x
+          end = room_structure_drag_end_x
+        }
+        else
+        {
+          start = room_structure_drag_end_x
+          end = room_structure_drag_start_x
+        }
+        
+        standard = room_structure_drag_start_y
+        room_window_code[current_window_number] = new Array(start, end, standard, "x", "left", "wall", "3")
+      }
+      else
+      {
+        if(room_structure_drag_start_y <= room_structure_drag_end_y)
+        {
+          start = room_structure_drag_start_y
+          end = room_structure_drag_end_y
+        }
+        else
+        {
+          start = room_structure_drag_end_y
+          end = room_structure_drag_start_y
+        }
+        
+        standard = room_structure_drag_start_x
+        room_window_code[current_window_number] = new Array(start, end, standard, "y", "bottom", "wall", "3")
+      }
+
+      console.log(room_window_code[0])
+      $('.room_one_element').css('background-color', 'green')
+      print_all_window_structure()
+      print_all_room_structure()
+
+      //툴팁 보이게
+      document.getElementById("window_tooltip_" + current_window_number).style.display = "block"
+
+      
       temp_drag_x1 = -1
       temp_drag_y1 = -1
       temp_drag_x2 = -1
@@ -541,9 +770,6 @@
     current_moving_element_class = element_class
     current_moving_element_parent_number = parent
       
-    
-    
-    
 
   };
 
@@ -567,6 +793,48 @@
       }
   }
 
+  //모든 창문 계열 영역 표시
+  //시작점, 끝점, 기준점, 축, 방향, 요소명, 굵기
+  function print_all_window_structure(){
+    var element_color
+    var border_location
+    var element_thickness
+    var temp
+
+    //이전 요소들 삭제   
+    $(".room_one_element").css("border", "none")
+
+    for(var i =0;i<room_window_code.length;i++)
+      {
+        if(room_window_code[i][5]=="wall")
+          element_color = wall_color
+        else if(room_window_code[i][5]=="window")
+          element_color = window_color
+        else if(room_window_code[i][5]=="door")
+          element_color = door_color
+
+        border_location = "border-"+room_window_code[i][4]
+        element_thickness = room_window_code[i][6] + "px"
+
+        if(room_window_code[i][3]=="x")
+        {
+          for(var k=room_window_code[i][0];k<=room_window_code[i][1];k++)
+          {
+            temp = k * 30 + room_window_code[i][2]
+            $(".room_one_element").eq(temp).css(border_location, "solid "+element_thickness +" "+ element_color);
+          }
+        }
+        else
+        {
+          for(var k=room_window_code[i][0];k<=room_window_code[i][1];k++)
+          {
+            temp = k + room_window_code[i][2] * 30
+            $(".room_one_element").eq(temp).css(border_location, "solid "+element_thickness+" "+element_color);
+          }
+        }
+      }
+  }
+
 
   //지정영역 색칠하는 함수
   function print_color(color, startx, starty, endx, endy){
@@ -576,6 +844,25 @@
       {
         change_color_num = tempx * 30 + tempy
         $(".room_one_element").eq(change_color_num).css("background-color",color)    
+      }
+    }
+  }
+
+  function print_linear_area_color(color, start, end, standard,  x_or_y){
+    if(x_or_y == "x")
+    {
+      for(var tempx = start;tempx<=end;tempx++)
+      {
+        change_color_num = tempx * 30 + standard
+        $(".room_one_element").eq(change_color_num).css("background-color",color)  
+      }
+    }
+    else
+    {
+      for(var tempy = start;tempy<=end;tempy++)
+      {
+        change_color_num = standard*30 + tempy
+        $(".room_one_element").eq(change_color_num).css("background-color",color)  
       }
     }
   }
@@ -608,9 +895,6 @@
   //방 구조 박스 클릭하면 색 변하고, 해당 번호를 current_room_structure로
   $(document).on('click', '.room_structure', function(e){
     e.preventDefault()
-    
-
-    
     if(current_room_structure == $(this).html()-1)
     {
       $('.room_one_element').css("pointer-events", "none")
@@ -627,12 +911,13 @@
       $('.room_structure').css('color', 'white')
       $('.room_one_element').css('border', 'none')
       $('.room_one_element').css('cursor', 'crosshair')
-      $(this).css('color', 'red')
+      $(this).css('color', preview_color)
 
       highlight_room_structure(current_room_structure, "5px solid black")
       
     }
-   
+    
+    print_all_window_structure()
     console.log(current_room_structure)
   })
 
@@ -690,9 +975,11 @@
 
         ele.children[0].children[1].children[0].innerHTML = cur_width
         ele.children[0].children[2].children[0].value = textarea_value
-    
+        
 
         $(event.target).append(ele)
+
+        dragElement(document.getElementById(ele.id+"_tooltip"));
 
         $(ele).animate({
         width:(cur_width * element_basic_width) + "%", height:(cur_height * element_basic_height) + "%"
@@ -703,7 +990,7 @@
   }
   
   //쓰레기통에 방 구조 drop했을때 함수
-  drop_room_strucutre_to_trash = function(){
+  drop_room_structure_to_trash = function(){
     var elements = document.getElementsByClassName("room_structure")
     elements[current_dragging_element_html-1].remove();
     
@@ -736,6 +1023,7 @@
     
     //배열에 있는 나머지 다시 색칠
     print_all_room_structure()
+    print_all_window_structure()
 
     
     
@@ -801,7 +1089,112 @@
     }
   }
 
-  //툴팁 생성하는 함수
+  //윈도우 요소의 툴팁 생성하는 함수
+  create_window_tooltip = function(number){
+    var ele = document.createElement("div")
+    ele.className = "window_tooltip_box"
+    ele.id = "window_tooltip_"+number
+
+    var draggable_box = document.createElement("div")
+    draggable_box.id = ele.id + "_tooltip_header"
+    draggable_box.className = "common_draggable_box"
+    
+
+
+    var location_box = document.createElement("div")
+    location_box.className = "location_box"
+    var location_button = document.createElement("button")
+    location_button.innerHTML = "change"
+    location_button.className = "btn btn-primary"
+    location_button.addEventListener("click", function(){change_border_location(number)})
+
+    var thickness_box = document.createElement("div")
+    thickness_box.className = "thickness_box"
+    var thickness_up_button = document.createElement("button")
+    var thickness_down_button = document.createElement("button")
+    thickness_up_button.innerHTML = "up"
+    thickness_up_button.className = "btn btn-primary"
+    thickness_up_button.addEventListener("click", function(){border_thickness_up(number)})
+    thickness_down_button.innerHTML = "down"
+    thickness_down_button.className = "btn btn-primary"
+    thickness_down_button.addEventListener("click", function(){border_thickness_down(number)})
+
+    var border_element_box = document.createElement("div")
+    border_element_box.className = "border_element_box"
+    var door_button = document.createElement("button")
+    var window_button = document.createElement("button")
+    var wall_button = document.createElement("button")
+    door_button.innerHTML = "문"
+    window_button.innerHTML = "창문"
+    wall_button.innerHTML = "벽"
+    door_button.className = "btn btn-primary"
+    window_button.className = "btn btn-primary"
+    wall_button.className = "btn btn-primary"
+    door_button.addEventListener("click", function(){change_border_type(number, "door")})
+    window_button.addEventListener("click", function(){change_border_type(number, "window")})
+    wall_button.addEventListener("click", function(){change_border_type(number, "wall")})
+
+    //연결
+    location_box.appendChild(location_button)
+
+    thickness_box.appendChild(thickness_down_button)
+    thickness_box.appendChild(thickness_up_button)
+
+    border_element_box.appendChild(door_button)
+    border_element_box.appendChild(window_button)
+    border_element_box.appendChild(wall_button)
+
+    ele.appendChild(draggable_box)
+    ele.appendChild(location_box)
+    ele.appendChild(thickness_box)
+    ele.appendChild(border_element_box)
+
+    return ele
+  }
+
+  function change_border_location(number){
+    console.log("haha")
+    if(room_window_code[number][4]=="top")
+    {
+      room_window_code[number][4]="bottom"
+    }
+    else if(room_window_code[number][4]=="bottom")
+    {
+      room_window_code[number][4]="top"
+    }
+    else if(room_window_code[number][4]=="left")
+    {
+      room_window_code[number][4]="right"
+    }
+    else if(room_window_code[number][4]=="right")
+    {
+      room_window_code[number][4]="left"
+    }
+
+    print_all_window_structure()
+  }
+
+  function change_border_type(number, type){
+   
+    room_window_code[number][5] = type
+    print_all_window_structure()
+   
+  }
+
+  function border_thickness_up(number){
+    room_window_code[number][6] = parseInt(room_window_code[number][6]) + 1
+
+    print_all_window_structure()
+  }
+
+  function border_thickness_down(number){
+    room_window_code[number][6] = parseInt(room_window_code[number][6]) - 1
+
+    print_all_window_structure()
+  }
+
+
+  //방 요소의 툴팁 생성하는 함수
   create_room_tooltip = function(id){
     //툴팁 전체 묶는거
     var ele = document.createElement("div")
@@ -985,6 +1378,7 @@
 
 //데이터 POST형식으로 전송하는 함수
 //방 구조 name은 room_structure_(num)
+//방 창문 요소 name은 room_window_structure_(num)
 //방 요소 name은 room_element_(num)
 //방 주소 name은 room_location
 //방 상세정보 name은 room_specific_information
@@ -992,7 +1386,6 @@
 //room_element_num -1 이 현재 추가된 요소의 개수
 function submit_room_data(){
   var temp_text = ""
-  console.log("haha")
   var form = document.getElementById("draw_data_submit")
   
   //방 구조 개수(실제 개수 저장)
@@ -1000,6 +1393,12 @@ function submit_room_data(){
   room_structure_number.setAttribute("name", "room_structure_number")
   room_structure_number.innerHTML = room_structure_code.length
   form.appendChild(room_structure_number)
+
+  //창문 요소 개수(실제 개수 저장)
+  var room_window_structure_number = document.createElement("textarea")
+  room_window_structure_number.setAttribute("name", "room_window_structure_number")
+  room_window_structure_number.innerHTML = room_window_code.length
+  form.appendChild(room_window_structure_number)
 
   //방 요소 개수(실제 개수 저장)
   var room_element_number = document.createElement("textarea")
@@ -1017,6 +1416,18 @@ function submit_room_data(){
       temp_text_save.innerHTML = temp_text
       form.appendChild(temp_text_save)
       temp_text = ""
+  }
+
+  //방 창문 요소 저장
+  for(var i=0;i<room_window_code.length;i++){
+    for(var j=0;j<7;j++){
+      temp_text = temp_text + " " + room_window_code[i][j]
+    }
+    var temp_text_save = document.createElement("textarea")
+    temp_text_save.setAttribute("name", "room_window_structure_"+i)
+    temp_text_save.innerHTML = temp_text
+    form.appendChild(temp_text_save)
+    temp_text = ""
   }
 
   //방 요소 저장
@@ -1067,6 +1478,112 @@ function submit_room_data(){
 
   form.submit()
 }
+
+
+
+ //방 모서리 요소 추가(문, 창문, 벽)
+  $("#add_room_window").click(function(){
+    
+    var new_structure = document.createElement("div")
+    new_structure.className = "room_window_structure"
+    new_structure.draggable = "true"
+    new_structure.setAttribute("ondragstart","drag_start_room_structure();")
+    new_structure.setAttribute("ondragend","drag_end_room_structure();")
+    new_structure.dataset.serial = window_structure_serial++
+    
+    new_structure.innerHTML = room_window_number
+    room_window_number = room_window_number+1
+
+    var parent = document.getElementById("room_window_add_parent")
+    room_window_code.push(0);
+    console.log(room_window_number)
+
+    parent.appendChild(new_structure);
+
+    //툴팁 추가
+    var temp_tooltip = create_window_tooltip(room_window_number-2)
+    $("#room_window_add_parent").append(temp_tooltip)
+    dragElement(temp_tooltip)
+  });
+
+
+  $(document).on('click', '.room_window_structure', function(e){
+    e.preventDefault()
+    var current_serial = $(this).data("serial")
+    
+    if(current_window_number == $(this).html()-1)
+    {
+      $('.room_one_element').css("pointer-events", "none")
+      current_window_number = -1
+      $(this).css('color', 'white')
+      document.getElementById("window_tooltip_"+current_serial).style.display = "none"
+      $('.room_one_element').css('cursor', 'default')
+   
+    }
+    else
+    {
+      $('.room_one_element').css("pointer-events", "auto")
+      current_window_number = $(this).html() - 1
+      $('.room_window_structure').css('color', 'white')
+      $('.room_one_element').css('border', 'none')
+      $('.room_one_element').css('cursor', 'crosshair')
+      $(this).css('color', preview_color)
+
+      //다른 툴팁들 안보이게
+      for(var i=0;i<=window_structure_serial;i++)
+      {
+        if(document.getElementById("window_tooltip_"+i) != null)
+          document.getElementById("window_tooltip_"+i).style.display = "none"
+      }
+
+      if(room_window_code[current_window_number] != 0)
+      {
+        document.getElementById("window_tooltip_"+current_serial).style.display = "block"
+      }
+      
+    }
+   
+    print_all_window_structure()
+    console.log(current_window_number)
+  })
+
+
+  //쓰레기통에 창문요소 drop했을때 함수
+  drop_room_window_to_trash = function(){
+    var elements = document.getElementsByClassName("room_window_structure")
+    var serial = elements[current_dragging_element_html-1].dataset.serial
+    elements[current_dragging_element_html-1].remove();
+    
+    $('.room_one_element').css('border', 'none')
+
+    //삭제한것 뒤 숫자 변경
+    //삭제한것 리스트에서 제거, 재배열
+    for(var i=current_dragging_element_html-1; i<elements.length;i++)
+    {
+      elements[i].innerHTML = elements[i].innerHTML-1
+    }
+
+    //툴팁 삭제
+    document.getElementById("window_tooltip_"+serial).remove()
+
+    //방이 선택 되어 있었다면 선택 안되도록
+    if(current_window_number!=-1)
+    {
+      current_window_number = -1
+      $('.room_one_element').css('cursor', 'default')
+    }
+  
+    room_window_number = room_window_number-1
+    room_window_code[elements.length] = 0
+    current_dragging_element_html = -1
+    
+    
+    console.log(current_window_number)
+    console.log(room_window_code)
+  }
+
+
+
 
 
 

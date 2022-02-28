@@ -40,7 +40,9 @@ for l in test_url:
         '''내부 요소 따로 로딩되기 때문에 로딩 될때까지 wait'''
         '''content box 내부도 로딩 시간에 차이가 있음에 주의하자'''
 
+
         WebDriverWait(driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR,'#content > div > div > div.styled__Wrap-sc-1j5nm8l-0.dWqXbC > ul > li:nth-child(1) > div > a')))
+
 
 
         name_of_agency = driver.find_element(By.CSS_SELECTOR,'#content > div > div > ul > li:nth-child(1) > div').get_attribute('innerText')
