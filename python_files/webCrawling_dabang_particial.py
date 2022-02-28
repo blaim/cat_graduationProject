@@ -33,17 +33,21 @@ def get_room_information(url):
         # 사진 url들을 구한다.
         script = "return window.getComputedStyle(document.querySelector('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__BigWrap-t81k0-3.fxstzP > div'),'::after').getPropertyValue('background-image')"
         scripts = "list = document.querySelectorAll('#content > div.styled__Wrap-t81k0-0.hAoXkk > div > div > div.styled__SmallWrap-t81k0-5.bBMySi > div');images = [];list.forEach(function(item){images.push(window.getComputedStyle(item, '::after').getPropertyValue('background-image'))});return images"
+
         image_url = []
+
         image_url.append(driver.execute_script(script))
         small = driver.execute_script(scripts)
         for i in range(len(small)):
             image_url.append(small[i])
         image_num = len(image_url)
         for i in range(image_num):
+
             image_url[i] = image_url[i][5:-2]
 
         # 공인중개사 정보를 구한다.
         agent = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__StickySideContainer-sc-1a06c6n-0.TVcfR > div > div > div.styled__LessorWrap-cvrpi1-13.jVGbJb > div > p').get_attribute('innerText')
+
 
         # 들어있는 가격 정보의 수를 구한다.
         price_list = driver.find_elements(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li')
@@ -53,6 +57,7 @@ def get_room_information(url):
         # 딕셔너리에 정보들을 집어넣는다.
         for i in range(price_num):
             b = ""
+
             a = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(1) > div > div > li:nth-child(' + str((i + 1)) + ') > div.styled__Name-rtvnk4-8.eFgXRF').get_attribute('innerText')
             a = a.replace('\n\n', ' ')
             if a == '관리비':
@@ -77,6 +82,7 @@ def get_room_information(url):
         # 단기임대
         Short_rental = price_list.get('단기임대')
         # 한달 예상 주거비용
+
         cost_per_month = price_list.get('한달 예상 주거비용')
 
         '''상세 정보 크롤링'''
@@ -93,6 +99,7 @@ def get_room_information(url):
                 b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str((i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj > label').get_attribute('innerText')
             else:
                 b = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(2) > div > div.styled__Ul-rtvnk4-7.iAUaiU > li:nth-child(' + str((i + 2)) + ') > div.styled__Content-rtvnk4-9.haTbsj').get_attribute('innerText')
+
             detailed_list[a] = b
         # 각 정보에 대해, 존재하면 값을 얻는다.
         floor = detailed_list.get('해당층/건물층')
@@ -118,6 +125,7 @@ def get_room_information(url):
         else:
             room_location = driver.find_element(By.CSS_SELECTOR,'#content > div.styled__StickyTopContainer-sc-1tkfz70-0.gnAkun > div > div > div.styled__Content-sc-11huzff-5.dmotyw > div:nth-child(5) > div > div.styled__NewAddress-sc-8pfhii-4.bXgTrC').get_attribute('innerText')
             street_name_location = "???"
+
 
         '''상세설명 크롤링'''
         detailed_description = \
